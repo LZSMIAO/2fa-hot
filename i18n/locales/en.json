@@ -231,7 +231,7 @@
   "m16393ae07475": "Get codes via a link",
   "m77b24c340eb1": "After generating a valid code, choose “Get link”. The URL looks like",
   "m3bc6b68530be": ". Opening it shows the current code. Non-default algorithm, digits and period are included in the URL parameters.",
-  "m97532984c0b0": "The link contains the full secret, sends it to the hosting service in a page request, and may remain in browser history. Share only with people who need access; never post it publicly.",
+  "m97532984c0b0": "New links keep the secret after # and do not send it with the page request; legacy path links still send it. Full links contain the secret and may remain in browser history. Share only with people who need access; never post them publicly.",
   "m8039419dffde": "Batch",
   "m5aeadd3c0e7d": "Enter one secret or otpauth URI per line, optionally preceded by a label and a tab. Up to 100 entries. Invalid lines are marked separately. “Copy all” includes only valid codes, never secrets.",
   "mfff3b626e660": "QR codes and configuration links",

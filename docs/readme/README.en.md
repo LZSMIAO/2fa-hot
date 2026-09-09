@@ -1,4 +1,14 @@
-# 2FA.HOT
+<div align="center">
+
+<h1>2FA.HOT</h1>
+
+**English** · [简体中文](README.zh-CN.md) · [繁體中文](../../README.md)
+
+![Nuxt](https://img.shields.io/badge/Nuxt-4-00DC82?style=flat-square&logo=nuxt&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Vue](https://img.shields.io/badge/Vue-3-4FC08D?style=flat-square&logo=vuedotjs&logoColor=white)
+
+</div>
 
 <!-- website:intro:start -->
 
@@ -6,7 +16,7 @@ A multifunctional online 2FA tool with a Minecraft-inspired design. Paste a 2FA 
 
 It automatically detects and switches to batch data, and recognizes multiple secret formats—whether it is some fucked-up format copied from Excel, or your customers not knowing what they are doing and copying their password along with the secret, it recognizes the input and gives the appropriate prompts.
 
-An accessible guide. Optional voice narration teaches you one-on-one how to use a secret to log into an account!
+An accessible, step-by-step guide with optional voice narration teaches you how to use a secret to log into an account!
 
 More features are being integrated…
 
@@ -14,15 +24,9 @@ More features are being integrated…
 
 <br>
 
-**English** · [简体中文](README.zh-CN.md) · [繁體中文](../../README.md)
+[![2fa.hot](../../assets/home-en.png)](https://2fa.hot)
 
 [Start](https://2fa.hot) · [Help](https://2fa.hot/help) · [Security](../../.github/SECURITY.md)
-
-![Nuxt](https://img.shields.io/badge/Nuxt-4-00DC82?style=flat-square&logo=nuxt&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![Vue](https://img.shields.io/badge/Vue-3-4FC08D?style=flat-square&logo=vuedotjs&logoColor=white)
-
-[![2fa.hot](../../assets/home-en.png)](https://2fa.hot)
 
 <!-- website:body:start -->
 
@@ -57,7 +61,7 @@ I originally wanted 2fa.mc, but gave up because I couldn't register **2FA®** to
 ...What if I kept a straight face while writing this?
 Then .HOT came along. Fine, fine, I'll admit it: that's sexy. We're going back.
 
-## Why I made this? Reinventing the wheel?
+## Why did I make this? Reinventing the wheel?
 
 Friends working in cross-border e-commerce need to log into accounts for tasks such as managing media accounts, while also considering security. Helping more friends with similar needs, as well as people just getting started online, was the starting point.
 There are many similar online tools, including ones that generate codes through direct links. But if you didn't know, opening a URL containing a secret, such as `/2fa/SECRET` or `?secret=SECRET`, sends the secret in an HTTP request. The remote website service or CDN receives that data and can record and retain it through access logs, monitoring or application logging. In other words, secrets in those requests may be stored in plain text; if you also pasted an account + password + 2FA, and the site uploaded and retained those too... BOOM! Of course, whether it actually retains them depends on its implementation, settings and privacy policy :))

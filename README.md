@@ -1,26 +1,30 @@
-# 2FA.HOT
+<div align="center">
+
+<h1>2FA.HOT</h1>
+
+[English](docs/readme/README.en.md) · [简体中文](docs/readme/README.zh-CN.md) · **繁體中文**
+
+![Nuxt](https://img.shields.io/badge/Nuxt-4-00DC82?style=flat-square&logo=nuxt&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Vue](https://img.shields.io/badge/Vue-3-4FC08D?style=flat-square&logo=vuedotjs&logoColor=white)
+
+</div>
 
 <!-- website:intro:start -->
 
-多功能線上2FA工具, 貼上密鑰，取得目前驗證碼。以 Minecraft風格為參考設計。支援直鏈、取碼完全由本地處理。
+多功能線上 2FA 工具， 貼上密鑰，取得目前驗證碼。以 Minecraft 風格為參考設計。支援直鏈、取碼完全由本地處理。
 
-支援自動識別/切換批量數據，同時支援多種密鑰格式 - 無論是從Excel表單複製過來的傻逼格式、或因您的客戶不會使用、連帶密碼+密鑰一起複製過來，都能識別並有相應提示。
-無障礙指南。可選用語音 一對一教學如何使用密鑰登錄賬戶！
+支援自動識別/切換批量數據，同時支援多種密鑰格式 - 無論是從 Excel表單複製過來的傻逼格式、或因您的客戶不會使用、連帶密碼+密鑰一起複製過來，都能識別並有相應提示。
+無障礙指南。可選用語音 一對一教學如何使用密鑰登入帳戶！
 正在集成更多功能…
 
 <!-- website:intro:end -->
 
 <br>
 
-[English](docs/readme/README.en.md) · [简体中文](docs/readme/README.zh-CN.md) · **繁體中文**
+[![2fa.hot](assets/home-zh-TW.png)](https://2fa.hot)
 
 [開始使用](https://2fa.hot/zh-TW) · [使用說明](https://2fa.hot/zh-TW/help) · [安全漏洞回報](.github/SECURITY.md)
-
-![Nuxt](https://img.shields.io/badge/Nuxt-4-00DC82?style=flat-square&logo=nuxt&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![Vue](https://img.shields.io/badge/Vue-3-4FC08D?style=flat-square&logo=vuedotjs&logoColor=white)
-
-[![2fa.hot](assets/home-zh-TW.png)](https://2fa.hot)
 
 <!-- website:body:start -->
 
@@ -37,11 +41,11 @@
 ## 怎麼用
 
 - 複製 2FA 密鑰，在 2fa.hot 貼上密鑰或匯入 QR 碼。
-- 在倒計時内複製使用目前驗證碼。
+- 在倒數計時內複製使用目前驗證碼。
 
 ## 密鑰存取
 
-- 首頁取碼和 QR 碼辨識 完全在瀏覽器內完成。
+- 首頁取碼和 QR 碼辨識完全在瀏覽器內完成。
 - 主動開啟本機紀錄後，紀錄會儲存在你的瀏覽器中。還可以設定密碼加密保護，也可以不設密碼，直接查看。
 - 新直達連結使用 `/2fa#密鑰`，密鑰和驗證參數位於 `#` 後面，僅由瀏覽器本地讀取，不會隨頁面請求傳至託管服務。舊 `/2fa/密鑰` 連結仍會隨請求傳送密鑰，建議改用新格式。完整連結仍含密鑰，也可能留在瀏覽器歷史裡。
 
@@ -78,7 +82,7 @@
 ## 素材來源與致謝
 
 - Minecraft 背景、音效與貼圖：Mojang / Microsoft。[背景](credits/PANORAMA-SOURCE.md) · [音效](credits/AUDIO-SOURCE.md) · [經驗條](credits/HUD-SOURCE.md) · [箱子](credits/CHEST-SOURCE.md) · [試煉鑰匙](credits/TRIAL-KEY-SOURCE.md) · [沙漠場景](credits/DESERT-SOURCE.md)。
-- 從雨角色皮膚：[Konata / LittleSkin，作品 513373](https://littleskin.cn/skinlib/show/513373)。角色姿勢與場景編排由本專案製作，皮膚權利歸原作者所有。
+- 叢雨角色皮膚：[Konata / LittleSkin，作品 513373](https://littleskin.cn/skinlib/show/513373)。角色姿勢與場景編排由本專案製作，皮膚權利歸原作者所有。
 - 介面設計參考：[OreUI](https://katorly.dev/OreUI/zh-CN/)。
 - 字體：VT323 Project Authors、Inter Project Authors、JetBrains Mono Project Authors，採用 SIL Open Font License 1.1。[VT323 授權](credits/VT323-OFL.txt) · [Inter 授權](credits/Inter-OFL.txt) · [JetBrains Mono 授權](credits/JetBrains-Mono-OFL.txt)。
 - 介面圖示：[Lucide Contributors](https://github.com/lucide-icons/lucide)，[ISC 授權](https://github.com/lucide-icons/lucide/blob/main/LICENSE)。
