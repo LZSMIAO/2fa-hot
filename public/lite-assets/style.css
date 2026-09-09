@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Lite Pixel';
+  src: url('/fonts/vt323-regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 * {
   box-sizing: border-box;
 }
@@ -12,7 +19,7 @@ body {
     sans-serif;
 }
 .page {
-  max-width: 680px;
+  max-width: 740px;
   margin: 0 auto;
   padding: 28px 24px;
 }
@@ -21,18 +28,40 @@ a {
   text-decoration: underline;
 }
 .header {
+  position: relative;
+  min-height: 58px;
+  padding-right: 132px;
   border-bottom: 2px solid #293c25;
+  padding-top: 4px;
   padding-bottom: 16px;
+  margin-bottom: 24px;
 }
 .brand {
-  font-size: 23px;
-  font-weight: bold;
+  font-family: 'Lite Pixel', monospace;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 38px;
+  line-height: 1;
+  font-weight: normal;
   color: #242820;
   text-decoration: none;
 }
+.brand-beta {
+  position: absolute;
+  right: 0;
+  top: -5px;
+  font:
+    10px/1 Arial,
+    sans-serif;
+  letter-spacing: 0.4px;
+}
 .mode {
+  display: inline-block;
+  vertical-align: middle;
   margin-left: 12px;
   padding: 2px 8px;
+  line-height: 20px;
   background: #dfe8d7;
   font-size: 13px;
 }
@@ -49,7 +78,8 @@ a {
   margin: 0 6px 4px 0;
   padding: 4px 10px;
 }
-.languages button[aria-pressed='true'] {
+.languages button[aria-pressed='true'],
+.languages button[aria-pressed='true']:not(:disabled):hover {
   background: #293c25;
   color: #fff;
   border-color: #293c25;
@@ -104,17 +134,18 @@ a:focus {
 .reveal {
   font-size: 14px;
   font-weight: normal;
-  padding: 6px 0;
+  margin: 8px 0 0;
+  padding: 8px 0;
 }
 .options {
-  margin: 16px -5px;
+  margin: 8px -4px 16px;
   font-size: 0;
 }
 .options label {
   display: inline-block;
   vertical-align: top;
   width: 33.333%;
-  padding: 0 5px;
+  padding: 0 4px;
   font-size: 13px;
 }
 .options select,
@@ -131,7 +162,7 @@ button {
   border: 1px solid #77826f;
   margin: 0 5px 4px 0;
 }
-button:hover {
+button:not(:disabled):hover {
   background: #e9eee3;
 }
 button.primary {
@@ -139,10 +170,11 @@ button.primary {
   background: #345c25;
   border-color: #345c25;
 }
-button.primary:hover {
+button.primary:not(:disabled):hover {
   background: #29491d;
 }
-button:disabled {
+button:disabled,
+button.primary:disabled {
   cursor: default;
   color: #62685d;
   background: #e5e8e0;
@@ -152,15 +184,30 @@ button:disabled {
   color: #a02020;
   margin: 8px 0;
 }
-.error:empty {
-  display: none;
+.panel .error {
+  min-height: 26px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+#status {
+  min-height: 21px;
+}
+.actions {
+  font-size: 0;
+  margin: 0 -4px;
+}
+.actions button {
+  font-size: 16px;
+  vertical-align: top;
+  margin: 0 4px;
+  max-width: calc(100% - 8px);
 }
 .result {
-  margin-top: 22px;
-  padding-top: 20px;
+  margin-top: 8px;
+  padding-top: 24px;
   border-top: 1px solid #c4cbbc;
 }
-input.code {
+.code {
   border: 0;
   background: #f3f4ef;
   height: 76px;
@@ -172,11 +219,28 @@ input.code {
     monospace;
   letter-spacing: 5px;
 }
+.result-heading {
+  display: table;
+  width: 100%;
+}
+.result-heading label {
+  display: table-cell;
+  vertical-align: middle;
+}
 .countdown {
-  text-align: center;
+  display: table-cell;
+  text-align: right;
+  vertical-align: middle;
   color: #515b49;
-  font-size: 14px;
-  margin: 8px 0 16px;
+  font-size: 12px;
+  margin: 0;
+  white-space: nowrap;
+}
+.result .actions {
+  margin-top: 16px;
+}
+.panel .privacy {
+  margin: 16px 0 0;
 }
 .manual {
   display: none;
@@ -207,11 +271,183 @@ input.code {
   h1 {
     font-size: 25px;
   }
-  input.code {
+  .code {
     font-size: 30px;
     letter-spacing: 3px;
   }
   .options label {
     font-size: 12px;
   }
+}
+
+.guide p {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+.guide h2 {
+  font-size: 20px;
+  margin: 28px 0 8px;
+}
+.guide .languages a {
+  display: inline-block;
+  padding: 8px 0;
+}
+
+main,
+section,
+nav,
+footer {
+  display: block;
+}
+
+.header:after,
+.page-links:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+select.language-select {
+  position: absolute;
+  right: 0;
+  top: 4px;
+  display: inline-block;
+  width: 120px;
+  height: 38px;
+  font-size: 14px;
+}
+.page-links .full {
+  padding-top: 0;
+}
+@media (max-width: 360px) {
+  .header {
+    padding-right: 118px;
+  }
+  .brand {
+    font-size: 32px;
+  }
+  .mode {
+    margin-left: 8px;
+    padding: 2px 6px;
+  }
+  select.language-select {
+    width: 110px;
+  }
+}
+
+.tool-title {
+  margin: 32px 0 24px;
+}
+
+.reveal input {
+  width: 16px;
+  height: 16px;
+  margin: 0 8px 0 0;
+  vertical-align: middle;
+}
+.reveal span {
+  display: inline-block;
+  vertical-align: middle;
+}
+.actions button {
+  width: 144px;
+  height: 44px;
+  padding: 8px;
+}
+.panel .privacy {
+  margin: 16px -24px -24px;
+  padding: 16px 24px;
+  border-top: 1px solid #c4cbbc;
+  background: #f3f4ef;
+}
+@media (max-width: 420px) {
+  .actions button {
+    width: calc(50% - 8px);
+  }
+  .panel .privacy {
+    margin: 16px -16px -16px;
+    padding: 16px;
+  }
+}
+
+.page-links .full {
+  float: none;
+  margin-left: 20px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 70px;
+  resize: vertical;
+  font: inherit;
+  padding: 8px;
+  border: 1px solid #77826f;
+  background: #fff;
+  color: #242820;
+}
+[hidden] {
+  display: none !important;
+}
+.standalone {
+  display: table-cell;
+  width: 32px;
+  text-align: right;
+  vertical-align: middle;
+}
+#choices {
+  margin-bottom: 16px;
+}
+
+.code-only > :not(.result):not(.privacy):not(.error) {
+  display: none;
+}
+.code-only .result {
+  border: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+.code-only #standalone {
+  display: none;
+}
+
+.secret-heading {
+  display: table;
+  width: 100%;
+  margin-bottom: 8px;
+}
+.secret-heading > label {
+  display: table-cell;
+  vertical-align: middle;
+}
+.secret-heading .reveal {
+  text-align: right;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0 0 0 8px;
+}
+.secret-heading .reveal input {
+  margin: 0 0 0 8px;
+}
+.input-actions {
+  margin-top: 16px;
+}
+.input-actions + .options {
+  margin-top: 24px;
+  margin-bottom: 0;
+}
+@media (max-width: 420px) {
+  .secret-heading > label {
+    font-size: 13px;
+  }
+  .secret-heading .reveal {
+    font-size: 12px;
+  }
+}
+
+.code {
+  padding: 8px 9px;
+  line-height: 60px;
+  cursor: default;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

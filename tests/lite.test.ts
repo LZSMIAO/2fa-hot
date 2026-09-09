@@ -86,7 +86,7 @@ test('Lite refuses multiple records, unsupported types and ambiguous parameters'
 test('Lite page assets stay below 50 KiB gzipped and have no app runtime or form submission', () => {
   const html = readFileSync(new URL('../server/templates/lite.ts', import.meta.url), 'utf8')
   assert.doesNotMatch(html, /<form|_nuxt|type="module"|https?:\/\/.*\.js/)
-  const assets = ['sha.js', 'otp.js', 'ui.js', 'style.css'].map((file) =>
+  const assets = ['sha.js', 'otp.js', 'paste.js', 'ui.js', 'style.css'].map((file) =>
     readFileSync(new URL('../public/lite-assets/' + file, import.meta.url))
   )
   const bytes = [Buffer.from(html), ...assets].reduce(
@@ -94,4 +94,29 @@ test('Lite page assets stay below 50 KiB gzipped and have no app runtime or form
     0
   )
   assert.ok(bytes < 50 * 1024, String(bytes))
+})
+
+test('Lite smart paste preserves rows and only associates unambiguous accounts', () => {
+  context.window = context
+  vm.runInContext(
+    readFileSync(new URL('../public/lite-assets/paste.js', import.meta.url), 'utf8'),
+    context
+  )
+  const analyze = context.LitePaste.analyze
+  const a = 'ixrn hqfa f3nf m5zx cqm2 buwe spni uzxe'
+  const b = 'al77 bst4 yldg xtud a4jm 5z2t xfnb wwaq'
+  assert.equal(analyze(a + '\n' + b).candidates.length, 2)
+  const ambiguous = analyze('test@example.com\n' + a + '\n' + b)
+  assert.equal(ambiguous.candidates.length, 2)
+  assert.ok(ambiguous.candidates.every((c: { label: string }) => !c.label))
+  const paired = analyze('one@example.com\n' + a + '\ntwo@example.com\n' + b)
+  assert.equal(paired.candidates[0].label, 'one@example.com')
+  assert.equal(paired.candidates[1].label, 'two@example.com')
+  const table = analyze(
+    '| one\\@example.com<br> ' + a + ' |\n| --- |\n| two@example.com<br> ' + b + ' |'
+  )
+  assert.equal(table.candidates.length, 2)
+  assert.equal(table.candidates[1].label, 'two@example.com')
+  assert.equal(analyze(secret + ' ' + secret).candidates.length, 2)
+  assert.equal(analyze('otpauth://hotp/Test?secret=' + secret).candidates.length, 0)
 })

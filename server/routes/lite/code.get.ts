@@ -1,4 +1,4 @@
-import html from '../templates/lite'
+import html from '../../templates/lite'
 
 // Standalone HTML: no Nuxt hydration, user data, or secret processing on the server.
 export default defineEventHandler((event) => {
@@ -13,5 +13,5 @@ export default defineEventHandler((event) => {
     'Content-Security-Policy',
     "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
   )
-  return html
+  return html.replace('class="panel"', 'class="panel code-only"')
 })

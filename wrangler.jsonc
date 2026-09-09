@@ -9,7 +9,7 @@
     "directory": ".output/public",
     "binding": "ASSETS"
   },
-  "workers_dev": true,
+  "workers_dev": false,
   "routes": [{ "pattern": "2fa.hot/*", "zone_name": "2fa.hot" }],
   "preview_urls": false,
   "observability": {

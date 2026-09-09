@@ -8,45 +8,32 @@ export default `<!doctype html>
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <title>2fa.hot Lite</title>
     <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="/lite-assets/style.css" />
+    <link rel="stylesheet" href="/lite-assets/style.css?v=2" />
   </head>
   <body>
     <div class="page">
       <div class="header">
-        <a class="brand" href="/">2fa.hot</a><span class="mode">Lite</span
-        ><a id="full" class="full" href="/">Full version</a>
+        <a class="brand" href="/lite">2fa.hot<span class="brand-beta">BETA</span></a><span class="mode">Lite</span
+        ><select id="language" class="language-select" aria-label="Language">
+          <option value="zh-TW">繁體中文</option><option value="zh-CN">简体中文</option><option value="en">English</option>
+        </select>
       </div>
-      <div class="languages" aria-label="Language">
-        <button type="button" data-lang="zh-TW">繁體中文</button
-        ><button type="button" data-lang="zh-CN">简体中文</button
-        ><button type="button" data-lang="en">English</button>
-      </div>
-      <h1 data-text="title">Your code. Nothing extra.</h1>
-      <p class="lead" data-text="intro">
-        Local 2FA codes. No animation, sound or account required.
-      </p>
+
+
       <noscript
         ><p class="error">
           JavaScript is required to calculate codes locally. 請啟用 JavaScript 以在本地取碼。
         </p></noscript
       >
       <div class="panel">
-        <label for="secret" data-text="secretLabel">Secret or otpauth:// link</label>
-        <input
-          id="secret"
-          type="password"
-          autocomplete="off"
-          spellcheck="false"
-          autocapitalize="off"
-          maxlength="8192"
-          aria-describedby="hint"
-        />
-        <p id="hint" class="hint" data-text="hint">
-          One Base32 secret at a time. Spaces between groups are supported.
-        </p>
-        <label class="reveal"
-          ><input id="reveal" type="checkbox" /> <span data-text="reveal">Show secret</span></label
-        >
+        <div class="secret-heading"><label for="secret" data-text="secretLabel">Secret or otpauth:// link</label><label class="reveal"><span data-text="reveal">Show secret</span><input id="reveal" type="checkbox" checked /></label></div>
+        <textarea id="secret" rows="2" autocomplete="off" spellcheck="false" maxlength="100000" placeholder="Base32 secrets or TOTP links"></textarea>
+        <input id="masked-secret" type="password" autocomplete="off" aria-label="Secret" hidden />
+        <div class="actions input-actions">
+          <button id="generate" type="button" class="primary" disabled data-text="generate">
+            Paste</button
+          ><button id="clear" type="button" disabled data-text="clear">Clear</button>
+        </div>
         <div class="options">
           <label
             ><span data-text="algorithm">Algorithm</span
@@ -68,45 +55,37 @@ export default `<!doctype html>
             ><input id="period" type="text" inputmode="numeric" value="30" maxlength="3"
           /></label>
         </div>
-        <div class="actions">
-          <button id="generate" type="button" class="primary" disabled data-text="generate">
-            Get code</button
-          ><button id="clear" type="button" disabled data-text="clear">Clear</button>
-        </div>
         <p id="error" class="error" role="alert"></p>
         <div class="result">
-          <label for="code" data-text="current">Current code</label>
-          <input
-            id="code"
-            class="code"
-            type="text"
-            readonly
-            value="------"
-            autocomplete="off"
-            aria-label="Current code"
-          />
-          <p id="countdown" class="countdown">—</p>
+          <div id="choices" hidden><label for="candidate" data-text="choose">Select a secret</label><select id="candidate"></select><p id="review" class="hint"></p></div>
+          <div class="result-heading"><label for="code" data-text="current">Current code</label><p id="countdown" class="countdown"></p><a id="standalone" class="standalone" aria-label="Open code page" hidden>↗</a></div>
+          <div id="code" class="code" role="status" aria-label="Current code">------</div>
+          <div class="actions">
           <button id="copy" type="button" class="primary" disabled data-text="copy">
             Copy code
           </button>
           <button id="link" type="button" disabled data-text="link">Copy link</button>
+          </div>
           <p id="status" class="hint" role="status" aria-live="polite"></p>
           <div id="manual" class="manual">
             <label for="copy-value" data-text="manual">Select and copy manually</label
             ><input id="copy-value" type="text" readonly autocomplete="off" />
           </div>
         </div>
-      </div>
       <p class="privacy" data-text="privacy">
         Secrets stay in this browser. No history is saved. Shared links still contain your secret;
         keep them private.
       </p>
+      </div>
+
+      <p class="page-links"><a id="help" href="/lite/help?lang=en">Usage guide</a><a id="full" class="full" href="/">Full version</a></p>
       <div class="footer">
-        <span>2fa.hot Lite</span><a href="https://github.com/LZSMIAO/2fa-hot">Source · AGPL-3.0</a>
+        <span>2fa.hot Lite</span><a href="https://github.com/LZSMIAO/2fa-hot" target="_blank" rel="noopener noreferrer">Source · AGPL-3.0</a>
       </div>
     </div>
     <script src="/lite-assets/sha.js"></script>
     <script src="/lite-assets/otp.js"></script>
+    <script src="/lite-assets/paste.js"></script>
     <script src="/lite-assets/ui.js"></script>
   </body>
 </html>

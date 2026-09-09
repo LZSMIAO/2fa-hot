@@ -85,7 +85,7 @@
     } else if (/^(?:https?:|\/|#)/i.test(input)) {
       // Only fragment links from this application; path secrets are never navigated to.
       match =
-        /^(?:(?:https?:\/\/(?:2fa\.hot|www\.2fa\.hot|localhost(?::\d+)?|127\.0\.0\.1(?::\d+)?))?(?:\/(?:[a-z]{2}(?:-[A-Za-z]{2})?\/)?(?:2fa|lite)\/?))?#([^#]+)$/.exec(
+        /^(?:(?:https?:\/\/(?:2fa\.hot|www\.2fa\.hot|localhost(?::\d+)?|127\.0\.0\.1(?::\d+)?))?(?:\/(?:[a-z]{2}(?:-[A-Za-z]{2})?\/)?(?:2fa|lite(?:\/code)?)\/?))?#([^#]+)$/.exec(
           input
         )
       if (!match) fail('unsupported')

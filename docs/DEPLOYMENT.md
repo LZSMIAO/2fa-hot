@@ -8,7 +8,7 @@
 
 - `name`：你的 Worker 名称。
 - `account_id`：你的 Cloudflare 账户 ID，也可以删除此字段，在 Wrangler 登录后选择账户。
-- `routes`：改为自己的域名，或先删除此字段，仅使用 `workers.dev` 地址。
+- `routes`：改为自己的域名。默认关闭 `workers.dev` 备用地址；Fork 若仅使用该地址，需删除 `routes` 并显式设置 `workers_dev: true`，同时独立保护该入口。
 - Fork 或更换域名时，同时更新 `shared/seo/routes.ts` 的 `siteUrl`，它用于 canonical、hreflang、sitemap 和预览域名索引隔离。
 - 保留 `main`、`assets`、兼容性标记以及禁止日志采集的设置。
 

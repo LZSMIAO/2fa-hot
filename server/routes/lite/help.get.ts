@@ -1,4 +1,4 @@
-import html from '../templates/lite'
+import { liteHelp, type LiteLanguage } from '../../templates/lite-help'
 
 // Standalone HTML: no Nuxt hydration, user data, or secret processing on the server.
 export default defineEventHandler((event) => {
@@ -13,5 +13,7 @@ export default defineEventHandler((event) => {
     'Content-Security-Policy',
     "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src data:; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
   )
-  return html
+  const requested = getQuery(event).lang
+  const language: LiteLanguage = requested === 'zh-TW' || requested === 'zh-CN' ? requested : 'en'
+  return liteHelp(language)
 })
