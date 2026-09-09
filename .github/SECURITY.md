@@ -1,27 +1,23 @@
-# 安全说明
+# Security
 
-## 报告漏洞
+## Report a vulnerability
 
-请在仓库的 **Security → Report a vulnerability** 中提交私密报告：
+Please submit a private report through [Security → Report a vulnerability](https://github.com/LZSMIAO/2fa-hot/security/advisories/new).
 
-[提交私密漏洞报告](https://github.com/LZSMIAO/2fa-hot/security/advisories/new)
+Include the affected commit or version, reproduction steps and expected impact. Use public test secrets only; never include real account secrets, access tokens or user backups.
 
-包含受影响的提交或版本、复现步骤、预期影响，以及仅使用公开测试密钥的最小示例。请勿上传真实账户密钥、访问令牌或用户备份。
+If private reporting is unavailable, contact [admin@2fa.hot](mailto:admin@2fa.hot). Do not disclose vulnerability details or sensitive data publicly.
 
-如果私密报告入口暂不可用，可先创建一个仅请求开启私密沟通入口的 Issue；不要在公开 Issue 中描述漏洞利用细节或敏感数据。项目没有承诺固定响应时间。
+## Supported version
 
-## 支持范围
+Security fixes target the latest `main` branch. Self-hosted deployments need to update and redeploy.
 
-安全修复优先提供给默认分支 `main`。历史提交不单独维护；自行部署者需要更新代码并重新部署。
+## Privacy boundaries
 
-## 数据边界
+- Homepage code generation and QR decoding run in the browser without a server-side code-generation API.
+- New `/2fa#SECRET` links keep secrets and parameters in the URL fragment, which is not sent in the HTTP page request. Full links still contain secrets and may remain in browser history or be read by page scripts and permitted extensions.
+- Legacy `/2fa/SECRET` links send secrets to the hosting service. New fragment links cannot undo earlier requests.
+- Local history is opt-in. Password protection encrypts it; without a password, records are stored unencrypted in the current browser. Use a strong, independent passphrase.
+- Local encryption does not protect a compromised device, page script or extension. Forgotten passphrases cannot be recovered. Keep backups and clipboard contents private.
 
-- 首页输入与二维码解码在浏览器中执行，不使用服务端取码接口。
-- 新生成的 `/2fa#SECRET` 链接把密钥和验证参数放在片段中，浏览器不会将片段随 HTTP 页面请求发送。完整链接仍含密钥，浏览器历史、页面脚本和扩展仍可能读取。
-- 旧 `/2fa/:secret` 链接保留兼容：路径中的密钥仍会到达托管服务。改成片段后的新链接不能撤回旧链接曾经发送的请求。
-- `no-store`、`no-referrer`、`noindex` 和禁用 Worker 日志不能阻止 URL 本身的传输，也无法控制外部代理或浏览器扩展。
-- 本地历史仅在用户主动启用后存储于 IndexedDB；启用密码保护时加密保存，不设密码时以明文保存在当前浏览器。PBKDF2 的计算成本不等于弱口令保护；应使用足够强的独立口令。
-- 本地加密不保护已被控制的设备、页面脚本或扩展。JavaScript 无法保证浏览器内存被物理擦除。
-- 忘记口令无法恢复；请自行保管加密备份。剪贴板、下载和分享由用户及操作系统管理。
-
-自动化测试包含标准向量、解析、加密错误口令/篡改和二维码往返，但本项目未经独立安全审计。摄像头、文件选择器和完整浏览器持久化流程需要在专用测试环境中验收。
+The project includes automated security-related tests but has not undergone an independent security audit.

@@ -20,7 +20,9 @@ export function parseAboutReadme(source: string) {
           blocks: body
             .join('\n')
             .trim()
-            .split(/\n\s*\n/)
+            .split(/(<details>[\s\S]*?<\/details>)/)
+            .flatMap((block) => (block.startsWith('<details>') ? [block] : block.split(/\n\s*\n/)))
+            .map((block) => block.trim())
             .filter(Boolean)
             .map((block) => {
               const spoiler =

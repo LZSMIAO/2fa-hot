@@ -1,21 +1,13 @@
 <script setup lang="ts">
 defineProps<{ label: string; text: string }>()
-const revealed = shallowRef(false)
-const hovered = shallowRef(false)
-function hover(event: PointerEvent, value: boolean) {
-  if (event.pointerType === 'mouse') hovered.value = value
-}
 </script>
 
 <template>
-  <details
-    class="about-spoiler"
-    :open="hovered || revealed"
-    @pointerenter="hover($event, true)"
-    @pointerleave="hover($event, false)"
-  >
-    <summary @click.prevent="revealed = !revealed">{{ label }}</summary>
-    <p><AboutInline :text="text" /></p>
+  <details class="about-spoiler">
+    <summary>{{ label }}</summary>
+    <p v-for="(paragraph, index) in text.split(/\n\s*\n/)" :key="index">
+      <AboutInline :text="paragraph" />
+    </p>
   </details>
 </template>
 
