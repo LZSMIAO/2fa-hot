@@ -12,7 +12,11 @@ More features are being integrated…
 
 <!-- website:intro:end -->
 
-[繁體中文](../../README.md) / [简体中文](README.zh-CN.md) / [English](README.en.md) · [Start](https://2fa.hot) / [Help](https://2fa.hot/help) / [Security](../../.github/SECURITY.md)
+<br>
+
+**English** · [简体中文](README.zh-CN.md) · [繁體中文](../../README.md)
+
+[Start](https://2fa.hot) · [Help](https://2fa.hot/help) · [Security](../../.github/SECURITY.md)
 
 ![Nuxt](https://img.shields.io/badge/Nuxt-4-00DC82?style=flat-square&logo=nuxt&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)

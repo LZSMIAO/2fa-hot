@@ -10,7 +10,11 @@
 
 <!-- website:intro:end -->
 
-[繁體中文](../../README.md) / [简体中文](README.zh-CN.md) / [English](README.en.md) · [开始使用](https://2fa.hot/zh-CN) / [使用说明](https://2fa.hot/zh-CN/help) / [安全漏洞报告](../../.github/SECURITY.md)
+<br>
+
+[English](README.en.md) · **简体中文** · [繁體中文](../../README.md)
+
+[开始使用](https://2fa.hot/zh-CN) · [使用说明](https://2fa.hot/zh-CN/help) · [安全漏洞报告](../../.github/SECURITY.md)
 
 ![Nuxt](https://img.shields.io/badge/Nuxt-4-00DC82?style=flat-square&logo=nuxt&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)
