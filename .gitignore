@@ -1,0 +1,15 @@
+node_modules
+.wrangler
+.nuxt
+.output
+.data
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+*.2fahot
+.DS_Store
+*.log
+
+.pnpm-store

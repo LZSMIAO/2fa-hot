@@ -1,0 +1,71 @@
+import type { SupportedLocale } from '../locales'
+
+// Localize the product title and purpose; retain standard 2FA / TOTP terminology.
+export const toolHeadings: Record<SupportedLocale, string> = {
+  en: 'Minecraft-inspired Authenticator | 2FA / TOTP · Batch codes',
+  'zh-CN': 'Minecraft 风格双重验证器 | 2FA / TOTP Authenticator · 批量取码',
+  'zh-TW': 'Minecraft 風格雙重驗證器 | 2FA / TOTP Authenticator · 批次取碼',
+  es: 'Autenticador estilo Minecraft | 2FA / TOTP Authenticator · Códigos por lotes',
+  fr: 'Authentificateur au style Minecraft | 2FA / TOTP Authenticator · Codes par lots',
+  de: 'Authenticator im Minecraft-Stil | 2FA / TOTP · Mehrere Codes',
+  'pt-BR': 'Autenticador estilo Minecraft | 2FA / TOTP Authenticator · Códigos em lote',
+  ru: 'Аутентификатор в стиле Minecraft | 2FA / TOTP Authenticator · Пакетная генерация',
+  ja: 'Minecraft スタイルの認証ツール | 2FA / TOTP Authenticator · コード一括生成',
+  ko: 'Minecraft 스타일 인증 도구 | 2FA / TOTP Authenticator · 코드 일괄 생성',
+  ar: 'أداة مصادقة بطابع Minecraft | 2FA / TOTP Authenticator · توليد جماعي للرموز',
+  hi: 'Minecraft शैली का प्रमाणक | 2FA / TOTP Authenticator · एक साथ कई कोड',
+  bn: 'Minecraft শৈলীর প্রমাণীকরণ টুল | 2FA / TOTP Authenticator · একসঙ্গে একাধিক কোড',
+  ur: 'Minecraft انداز کا تصدیقی ٹول | 2FA / TOTP Authenticator · بیک وقت کئی کوڈ',
+  id: 'Autentikator bergaya Minecraft | 2FA / TOTP Authenticator · Kode massal',
+  ms: 'Pengesah bergaya Minecraft | 2FA / TOTP Authenticator · Kod berkelompok',
+  vi: 'Trình xác thực phong cách Minecraft | 2FA / TOTP Authenticator · Tạo mã hàng loạt',
+  th: 'เครื่องมือยืนยันตัวตนสไตล์ Minecraft | 2FA / TOTP Authenticator · สร้างหลายรหัส',
+  tr: 'Minecraft tarzı doğrulayıcı | 2FA / TOTP Authenticator · Toplu kod üretimi',
+  it: 'Autenticatore in stile Minecraft | 2FA / TOTP Authenticator · Codici in blocco',
+  nl: 'Authenticator in Minecraft-stijl | 2FA / TOTP · Meerdere codes',
+  pl: 'Uwierzytelnianie w stylu Minecraft | 2FA / TOTP Authenticator · Kody zbiorcze',
+  uk: 'Автентифікатор у стилі Minecraft | 2FA / TOTP Authenticator · Пакетна генерація',
+  fa: 'ابزار احراز هویت با سبک Minecraft | 2FA / TOTP Authenticator · تولید گروهی کد',
+  he: 'כלי אימות בסגנון Minecraft | 2FA / TOTP Authenticator · קודים באצווה',
+  sw: 'Kithibitishaji kwa mtindo wa Minecraft | 2FA / TOTP Authenticator · Misimbo kwa makundi',
+  fil: 'Authenticator na may estilong Minecraft | 2FA / TOTP · Maramihang code',
+  ta: 'Minecraft பாணி அங்கீகாரக் கருவி | 2FA / TOTP Authenticator · தொகுப்பாகக் குறியீடுகள்',
+  te: 'Minecraft శైలి ప్రామాణీకరణ సాధనం | 2FA / TOTP Authenticator · ఒకేసారి పలు కోడ్‌లు',
+  el: 'Εργαλείο επαλήθευσης σε στυλ Minecraft | 2FA / TOTP Authenticator · Μαζικοί κωδικοί'
+}
+
+export const toolDescriptions: Record<SupportedLocale, string> = {
+  en: 'Minecraft-inspired online 2FA code generator with TOTP, batch code generation and QR import. Runs in your browser, with no sign-up and optional encrypted local history.',
+  'zh-CN':
+    'Minecraft 风格的在线 2FA 验证码生成器，支持 TOTP 动态验证码生成、批量获取与二维码导入。浏览器内计算，无需注册，可选本地加密历史。',
+  'zh-TW':
+    'Minecraft 風格的線上 2FA 驗證碼產生器，支援 TOTP 動態驗證碼產生、批次取碼與 QR Code 匯入。瀏覽器內計算，無需註冊，可選本機加密歷史。',
+  es: 'Generador de códigos 2FA en línea con estilo Minecraft. Admite TOTP, generación por lotes e importación QR. Funciona en el navegador, sin registro y con historial local cifrado opcional.',
+  fr: 'Générateur de codes 2FA en ligne au style Minecraft. Codes TOTP, génération par lots et import QR. Calcul dans le navigateur, sans inscription, avec historique local chiffré en option.',
+  de: 'Online-Generator für 2FA-Codes im Minecraft-Stil. TOTP-Codes, mehrere Codes gleichzeitig und QR-Import. Berechnung im Browser, ohne Registrierung, mit optional verschlüsseltem lokalem Verlauf.',
+  'pt-BR':
+    'Gerador de códigos 2FA online com estilo Minecraft. Suporta TOTP, geração em lote e importação QR. Funciona no navegador, sem cadastro, com histórico local criptografado opcional.',
+  ru: 'Онлайн-генератор кодов 2FA в стиле Minecraft. Поддержка TOTP, пакетной генерации и импорта QR. Вычисления в браузере, без регистрации, с локальной зашифрованной историей по желанию.',
+  ja: 'Minecraft スタイルのオンライン 2FA 認証コード生成ツール。TOTP ワンタイムパスワード、一括生成、QR コードの読み込みに対応。ブラウザ内で計算、登録不要。暗号化したローカル履歴を任意で保存できます。',
+  ko: 'Minecraft 스타일의 온라인 2FA 인증 코드 생성기. TOTP 일회용 코드, 일괄 생성, QR 가져오기를 지원합니다. 브라우저에서 계산하며 가입이 필요 없고, 암호화된 로컬 기록을 선택적으로 저장할 수 있습니다.',
+  ar: 'مولّد رموز 2FA عبر الإنترنت بطابع Minecraft. يدعم رموز TOTP والتوليد الجماعي واستيراد QR. يعمل داخل المتصفح دون تسجيل، مع سجل محلي مشفّر اختياري.',
+  hi: 'Minecraft शैली का ऑनलाइन 2FA कोड जनरेटर। TOTP कोड, एक साथ कई कोड बनाना और QR आयात समर्थित। ब्राउज़र में गणना, बिना पंजीकरण, वैकल्पिक एन्क्रिप्टेड स्थानीय इतिहास के साथ।',
+  bn: 'Minecraft শৈলীর অনলাইন 2FA কোড জেনারেটর। TOTP কোড, একসঙ্গে একাধিক কোড তৈরি ও QR আমদানি সমর্থিত। ব্রাউজারেই গণনা, নিবন্ধন ছাড়াই, ঐচ্ছিক এনক্রিপ্ট করা স্থানীয় ইতিহাসসহ।',
+  ur: 'Minecraft انداز کا آن لائن 2FA کوڈ جنریٹر۔ TOTP کوڈ، بیک وقت کئی کوڈ بنانا اور QR درآمد کی سہولت۔ حساب براؤزر میں، بغیر رجسٹریشن، اختیاری مقامی خفیہ کردہ تاریخ کے ساتھ۔',
+  id: 'Generator kode 2FA online bergaya Minecraft. Mendukung TOTP, pembuatan kode massal dan impor QR. Perhitungan di browser, tanpa pendaftaran, dengan riwayat lokal terenkripsi opsional.',
+  ms: 'Penjana kod 2FA dalam talian bergaya Minecraft. Menyokong TOTP, penjanaan kod berkelompok dan import QR. Pengiraan dalam pelayar, tanpa pendaftaran, dengan sejarah tempatan disulitkan secara pilihan.',
+  vi: 'Trình tạo mã 2FA trực tuyến phong cách Minecraft. Hỗ trợ mã TOTP, tạo mã hàng loạt và nhập QR. Tính toán trong trình duyệt, không cần đăng ký, với tùy chọn lưu lịch sử cục bộ được mã hóa.',
+  th: 'เครื่องมือสร้างรหัส 2FA ออนไลน์สไตล์ Minecraft รองรับรหัส TOTP การสร้างหลายรหัสและนำเข้า QR คำนวณในเบราว์เซอร์ ไม่ต้องสมัครสมาชิก และเลือกเก็บประวัติแบบเข้ารหัสในเครื่องได้',
+  tr: 'Minecraft tarzında çevrimiçi 2FA kod üretici. TOTP, toplu kod üretimi ve QR içe aktarma desteği. Tarayıcıda hesaplama, kayıt gerektirmez, isteğe bağlı şifreli yerel geçmiş.',
+  it: 'Generatore di codici 2FA online in stile Minecraft. Supporta TOTP, generazione in blocco e importazione QR. Calcolo nel browser, senza registrazione, con cronologia locale cifrata facoltativa.',
+  nl: 'Online generator voor 2FA-codes in Minecraft-stijl. TOTP, meerdere codes tegelijk en QR-import. Berekening in je browser, zonder registratie, met optionele versleutelde lokale geschiedenis.',
+  pl: 'Generator kodów 2FA online w stylu Minecraft. Obsługuje TOTP, generowanie wielu kodów naraz i import QR. Obliczenia w przeglądarce, bez rejestracji, z opcjonalną szyfrowaną historią lokalną.',
+  uk: 'Онлайн-генератор кодів 2FA у стилі Minecraft. Підтримка TOTP, пакетної генерації та імпорту QR. Обчислення в браузері, без реєстрації, з локальною зашифрованою історією за бажанням.',
+  fa: 'تولیدکننده آنلاین کدهای 2FA با سبک Minecraft. پشتیبانی از TOTP، تولید گروهی کد و واردکردن QR. محاسبه در مرورگر، بدون ثبت‌نام، با تاریخچه محلی رمزگذاری‌شده اختیاری.',
+  he: 'מחולל קודי 2FA מקוון בסגנון Minecraft. תומך ב-TOTP, יצירת קודים באצווה וייבוא QR. חישוב בדפדפן, ללא הרשמה, עם היסטוריה מקומית מוצפנת לבחירה.',
+  sw: 'Kizalishaji cha misimbo ya 2FA mtandaoni kwa mtindo wa Minecraft. Kinasaidia TOTP, kutengeneza misimbo kwa makundi na kuingiza QR. Hukokotoa ndani ya kivinjari, bila kujisajili, na historia ya ndani iliyosimbwa kwa hiari.',
+  fil: 'Online na generator ng 2FA code na may estilong Minecraft. May TOTP, maramihang pagbuo ng code at QR import. Kinakalkula sa browser, walang pagpaparehistro, at may opsyonal na naka-encrypt na lokal na history.',
+  ta: 'Minecraft பாணியிலான இணையவழி 2FA குறியீடு உருவாக்கி. TOTP குறியீடுகள், தொகுப்பாக உருவாக்குதல் மற்றும் QR இறக்குமதி ஆதரவு. உலாவியிலேயே கணக்கீடு, பதிவு தேவையில்லை; விருப்ப உள்ளூர் மறைகுறியாக்க வரலாறு.',
+  te: 'Minecraft శైలిలో ఆన్‌లైన్ 2FA కోడ్ జనరేటర్. TOTP కోడ్‌లు, ఒకేసారి పలు కోడ్‌ల తయారీ, QR దిగుమతికి మద్దతు. బ్రౌజర్‌లోనే గణన, నమోదు అవసరం లేదు; ఐచ్ఛిక ఎన్‌క్రిప్టెడ్ స్థానిక చరిత్ర.',
+  el: 'Διαδικτυακή γεννήτρια κωδικών 2FA σε στυλ Minecraft. Υποστηρίζει TOTP, μαζική δημιουργία κωδικών και εισαγωγή QR. Υπολογισμός στον browser, χωρίς εγγραφή, με προαιρετικό κρυπτογραφημένο τοπικό ιστορικό.'
+}

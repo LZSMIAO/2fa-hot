@@ -1,0 +1,6 @@
+pnpm-lock.yaml
+.nuxt
+.output
+.wrangler
+node_modules
+docs/design/*.png

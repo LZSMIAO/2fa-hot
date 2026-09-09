@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#222522"/>
+  <path d="M64 68H1136V562H64Z" fill="#303530" stroke="#525b52" stroke-width="2"/>
+  <path d="M64 68H1136V76H72V562H64Z" fill="#727a72"/>
+  <path d="M72 554H1128V76H1136V562H72Z" fill="#101310"/>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="118" y="217" font-size="88" font-weight="700" fill="#f2f4f2">2fa<tspan fill="#e9d253">.hot</tspan></text>
+    <text x="118" y="315" font-size="48" font-weight="700" fill="#f2f4f2">2FA &amp; TOTP code generator</text>
+    <text x="118" y="378" font-size="27" fill="#c5ccc5">Browser-based codes · QR import · Batch generation</text>
+    <rect x="118" y="433" width="294" height="58" fill="#477a3e"/>
+    <text x="142" y="471" font-size="26" fill="#ffffff">Free. No sign-up.</text>
+  </g>
+</svg>

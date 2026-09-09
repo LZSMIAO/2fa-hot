@@ -1,0 +1,679 @@
+<script setup lang="ts">
+import type { VaultRecord } from '~/composables/useVault'
+import { downloadFile } from '~/utils/download'
+
+const localePath = useLocalePath()
+const { tx, locale } = useMessages()
+const protect = shallowRef(true)
+const vault = useVault(),
+  search = shallowRef(''),
+  password = shallowRef(''),
+  confirmation = shallowRef(''),
+  error = shallowRef(''),
+  note = shallowRef(''),
+  selected = shallowRef<string[]>([])
+const {
+  protectionOpen,
+  changingPassword,
+  needsNewPassword,
+  protectionChanged,
+  nextProtection,
+  newPassword,
+  newConfirmation,
+  openProtection,
+  saveProtection
+} = useHistoryProtection(vault, error, run)
+const editor = shallowRef<VaultRecord | null>(null),
+  label = shallowRef(''),
+  remark = shallowRef(''),
+  removing = shallowRef<string[] | null>(null),
+  eraseOpen = shallowRef(false)
+const importOpen = shallowRef(false),
+  backupText = shallowRef(''),
+  backupPassword = shallowRef(''),
+  imported = shallowRef<VaultRecord[] | null>(null),
+  importing = shallowRef(false)
+const fileInput = useTemplateRef<HTMLInputElement>('backupFile')
+const rows = computed(() =>
+  [...vault.records.value]
+    .filter((r) =>
+      `${r.label} ${r.issuer} ${r.note}`.toLowerCase().includes(search.value.toLowerCase())
+    )
+    .sort((a, b) => b.usedAt - a.usedAt)
+)
+watch(importOpen, (open) => {
+  if (!open) {
+    imported.value = null
+    backupPassword.value = ''
+    backupText.value = ''
+  }
+})
+watch(
+  () => vault.unlocked.value,
+  () => {
+    editor.value = null
+    label.value = ''
+    remark.value = ''
+    search.value = ''
+    selected.value = []
+    imported.value = null
+    backupPassword.value = ''
+    backupText.value = ''
+  }
+)
+async function run(action: () => Promise<unknown>, success = '') {
+  error.value = ''
+  note.value = ''
+  try {
+    await action()
+    note.value = success
+  } catch (e) {
+    error.value = (e as Error).message
+  }
+}
+async function unlock() {
+  if (!vault.exists.value && protect.value && password.value !== confirmation.value) {
+    error.value = '两次口令不一致。'
+    return
+  }
+  const p = password.value
+  password.value = ''
+  confirmation.value = ''
+  await run(() =>
+    vault.exists.value ? vault.unlock(p) : vault.enable(protect.value ? p : undefined)
+  )
+}
+function edit(row: VaultRecord) {
+  editor.value = { ...row }
+  label.value = row.label
+  remark.value = row.note
+}
+async function saveEdit() {
+  if (!editor.value) return
+  await run(async () => {
+    await vault.edit(editor.value!.id, label.value, remark.value)
+    editor.value = null
+  }, '备注已保存')
+}
+async function remove() {
+  if (!removing.value) return
+  await run(async () => {
+    await vault.remove(removing.value!)
+    removing.value = null
+    selected.value = []
+  }, '记录已删除')
+}
+async function backup() {
+  await run(async () => {
+    const data = await vault.backup()
+    downloadFile(
+      new Blob([data], { type: 'application/json' }),
+      `2fa-backup-${new Date().toISOString().slice(0, 10)}.2fahot`
+    )
+  }, '备份已导出，请妥善保管。')
+}
+async function file(event: Event) {
+  const f = (event.target as HTMLInputElement).files?.[0]
+  if (!f) return
+  if (f.size > 10_000_000) {
+    error.value = '备份不能超过 10MB。'
+    return
+  }
+  backupText.value = await f.text()
+  imported.value = null
+}
+async function inspect() {
+  importing.value = true
+  await run(async () => {
+    imported.value = await vault.inspectBackup(backupText.value, backupPassword.value)
+    backupPassword.value = ''
+  })
+  importing.value = false
+}
+async function merge() {
+  if (!imported.value) return
+  await run(async () => {
+    await vault.merge(imported.value!)
+    imported.value = null
+    backupText.value = ''
+    importOpen.value = false
+  }, '已合并备份，现有记录优先保留。')
+}
+const date = (v: number) =>
+  new Intl.DateTimeFormat(locale.value, {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(v)
+</script>
+<template>
+  <div class="history-surface ore-workspace-frame">
+    <div v-if="!vault.ready.value" class="empty-state">
+      <UIcon name="i-lucide-loader-circle" />
+      <p>{{ tx('正在读取本地存储…') }}</p>
+    </div>
+    <div v-else-if="!vault.unlocked.value" class="vault-gate">
+      <div class="vault-title">
+        <McChest />
+        <h2>{{ tx(vault.exists.value ? '解锁本地历史' : '开启本地历史') }}</h2>
+      </div>
+      <p>
+        {{
+          tx(
+            vault.exists.value
+              ? '输入本地口令，查看这台设备保存的记录。'
+              : '记录保存在当前浏览器，可选择密码保护。'
+          )
+        }}
+      </p>
+      <form class="unlock-form" @submit.prevent="unlock">
+        <label v-if="!vault.exists.value" class="flex items-center gap-2"
+          ><input v-model="protect" type="checkbox" />{{ tx('使用密码保护') }}</label
+        >
+        <p v-if="!vault.exists.value && !protect" class="field-hint">
+          {{ tx('不设密码，记录将直接保存在此浏览器，打开即可查看。') }}
+        </p>
+        <UFormField v-if="vault.exists.value || protect" :label="tx('本地解锁口令')"
+          ><UInput
+            v-model="password"
+            type="password"
+            class="w-full"
+            size="xl"
+            :autocomplete="vault.exists.value ? 'current-password' : 'new-password'"
+            :placeholder="tx('至少 4 个字符')"
+            :minlength="vault.exists.value ? undefined : 4"
+            required /></UFormField
+        ><UFormField v-if="!vault.exists.value && protect" :label="tx('再次输入口令')"
+          ><UInput
+            v-model="confirmation"
+            type="password"
+            class="w-full"
+            size="xl"
+            autocomplete="new-password"
+            :placeholder="tx('确认你的解锁口令')"
+            required /></UFormField
+        ><UButton
+          type="submit"
+          class="primary-button w-full"
+          :loading="vault.busy.value"
+          :disabled="!!vault.issue.value"
+          :icon="vault.exists.value ? 'i-lucide-unlock' : 'i-lucide-shield-check'"
+          >{{ tx(vault.exists.value ? '解锁历史' : '开启本地历史') }}</UButton
+        >
+      </form>
+      <p class="vault-note">
+        {{ tx('无需网站账户') }}<br />{{ tx('清理浏览器数据会删除记录，请定期备份。') }}
+      </p>
+      <button v-if="vault.exists.value" class="text-action" @click="eraseOpen = true">
+        {{ tx('忘记口令？清除本地历史') }}
+      </button>
+    </div>
+    <template v-else
+      ><div class="history-toolbar">
+        <UInput
+          v-model="search"
+          icon="i-lucide-search"
+          :placeholder="tx('搜索标签或备注')"
+          :aria-label="tx('搜索本地历史')"
+          class="history-search"
+        />
+        <div class="history-actions">
+          <UButton
+            class="history-autosave"
+            color="neutral"
+            variant="outline"
+            :disabled="vault.busy.value"
+            @click="run(vault.toggle)"
+            >{{ tx(vault.enabled.value ? '关闭自动保存' : '开启自动保存') }}</UButton
+          >
+          <div class="history-action-buttons">
+            <UButton color="neutral" variant="ghost" @click="openProtection">{{
+              tx(vault.passwordProtected.value ? '密码保护已开启' : '使用密码保护')
+            }}</UButton>
+            <UButton
+              v-if="vault.passwordProtected.value"
+              color="neutral"
+              variant="ghost"
+              icon="i-lucide-lock"
+              @click="vault.lock"
+              >{{ tx('锁定') }}</UButton
+            ><UButton color="neutral" variant="outline" icon="i-lucide-download" @click="backup">{{
+              tx('备份')
+            }}</UButton
+            ><UButton
+              color="neutral"
+              variant="outline"
+              icon="i-lucide-upload"
+              @click="importOpen = true"
+              >{{ tx('导入') }}</UButton
+            >
+          </div>
+        </div>
+      </div>
+      <div class="history-status">
+        <span
+          >{{ tx('记录：{count}', { count: vault.records.value.length }) }} ·
+          {{ tx(vault.enabled.value ? '自动保存已开启' : '自动保存已关闭') }}</span
+        >
+      </div>
+      <div v-if="!rows.length" class="empty-state">
+        <UIcon :name="search ? 'i-lucide-search-x' : 'i-lucide-history'" />
+        <h2>{{ tx(search ? '没有找到匹配记录' : '还没有保存记录') }}</h2>
+        <p>
+          {{
+            tx(
+              search
+                ? '换一个标签或备注关键词试试。'
+                : '返回工具取码并复制后，记录会保存在这里。演示数据不会保存。'
+            )
+          }}
+        </p>
+        <UButton v-if="!search" :to="localePath('/')" class="primary-button"
+          >{{ tx('开始取码') }}<UIcon name="i-lucide-arrow-right"
+        /></UButton>
+      </div>
+      <div v-for="row in rows" :key="row.id" class="history-row">
+        <input
+          v-model="selected"
+          type="checkbox"
+          :value="row.id"
+          :aria-label="tx('选择 {label}', { label: row.label || tx('未命名记录') })"
+        /><span class="record-icon"
+          ><img src="/textures/trial-key.png" alt="" width="32" height="32"
+        /></span>
+        <div class="record-name">
+          <div class="record-title">
+            <button
+              type="button"
+              class="record-edit"
+              :aria-label="tx('编辑备注')"
+              @click="edit(row)"
+            >
+              <UIcon name="i-lucide-pencil" />
+            </button>
+            <strong>{{ row.label || row.issuer || tx('未命名记录') }}</strong>
+          </div>
+          <p>
+            {{
+              row.note ||
+              tx('{algorithm} · {digits} 位 · {period} 秒', {
+                algorithm: row.algorithm,
+                digits: row.digits,
+                period: row.period
+              })
+            }}
+          </p>
+          <small>{{ tx(date(row.usedAt)) }}</small>
+        </div>
+        <HistoryCode :config="row" />
+        <UButton
+          color="neutral"
+          variant="ghost"
+          icon="i-lucide-trash-2"
+          :aria-label="tx('删除记录')"
+          @click="removing = [row.id]"
+        />
+      </div>
+      <div class="history-danger">
+        <UButton
+          v-if="selected.length"
+          color="error"
+          variant="soft"
+          size="sm"
+          @click="removing = [...selected]"
+          >{{ tx('删除所选：{count}', { count: selected.length }) }}</UButton
+        ><button class="text-action ms-auto" @click="eraseOpen = true">
+          {{ tx('清空全部本地历史') }}
+        </button>
+      </div></template
+    >
+    <p v-if="error || vault.issue.value" class="inline-error history-feedback" role="alert">
+      {{ tx(error || vault.issue.value) }}
+    </p>
+    <p v-if="note" class="inline-notice history-feedback" role="status">{{ tx(note) }}</p>
+  </div>
+  <UModal
+    :open="!!editor"
+    :title="tx('编辑记录')"
+    :description="tx('标签和备注随密钥一起保存。')"
+    @update:open="
+      (v) => {
+        if (!v) editor = null
+      }
+    "
+    ><template #body
+      ><div class="modal-stack">
+        <UFormField :label="tx('标签')"
+          ><UInput v-model="label" maxlength="120" class="w-full" /></UFormField
+        ><UFormField :label="tx('备注')"
+          ><UTextarea v-model="remark" maxlength="1000" :rows="4" class="w-full"
+        /></UFormField>
+        <p v-if="error" class="inline-error">{{ tx(error) }}</p>
+      </div></template
+    ><template #footer
+      ><UButton class="primary-button" :loading="vault.busy.value" @click="saveEdit">{{
+        tx('保存备注')
+      }}</UButton></template
+    ></UModal
+  >
+  <UModal
+    :open="!!removing"
+    :title="tx('删除所选记录？')"
+    :description="
+      tx('将永久删除本地记录：{count}。此操作不可撤销。', { count: removing?.length || 0 })
+    "
+    @update:open="
+      (v) => {
+        if (!v) removing = null
+      }
+    "
+    ><template #footer
+      ><UButton color="neutral" variant="outline" @click="removing = null">{{ tx('取消') }}</UButton
+      ><UButton color="error" :loading="vault.busy.value" @click="remove">{{
+        tx('删除记录')
+      }}</UButton></template
+    ></UModal
+  >
+  <UModal
+    v-model:open="eraseOpen"
+    :title="tx('清空全部本地历史？')"
+    :description="tx('所有记录和本地保存设置将永久删除，无法撤销。已有导出备份不会受影响。')"
+    ><template #footer
+      ><UButton color="neutral" variant="outline" @click="eraseOpen = false">{{
+        tx('取消')
+      }}</UButton
+      ><UButton
+        color="error"
+        :loading="vault.busy.value"
+        @click="
+          run(async () => {
+            await vault.erase()
+            eraseOpen = false
+          })
+        "
+        >{{ tx('永久清空') }}</UButton
+      ></template
+    ></UModal
+  >
+  <UModal
+    v-model:open="importOpen"
+    :title="tx('导入备份')"
+    :description="tx('重复记录保留现有版本。')"
+    ><template #body
+      ><div class="modal-stack">
+        <input
+          ref="backupFile"
+          type="file"
+          accept=".2fahot,application/json"
+          :aria-label="tx('导入备份')"
+          @change="file"
+        /><template v-if="!imported"
+          ><UFormField :label="tx('备份的解锁口令')"
+            ><UInput
+              v-model="backupPassword"
+              type="password"
+              class="w-full"
+              autocomplete="off" /></UFormField
+          ><UButton
+            color="neutral"
+            variant="outline"
+            :disabled="!backupText"
+            :loading="importing"
+            @click="inspect"
+            >{{ tx('解锁并预览') }}</UButton
+          ></template
+        >
+        <p v-else>
+          {{
+            tx('已解锁记录：{count}。合并将保留现有记录，并添加新的密钥。', {
+              count: imported.length
+            })
+          }}
+        </p>
+        <p v-if="error" class="inline-error">{{ tx(error) }}</p>
+      </div></template
+    ><template #footer
+      ><UButton
+        class="primary-button"
+        :disabled="!imported"
+        :loading="vault.busy.value"
+        @click="merge"
+        >{{ tx('合并到本地历史') }}</UButton
+      ></template
+    ></UModal
+  >
+  <UModal
+    v-model:open="protectionOpen"
+    :title="tx(vault.passwordProtected.value ? '密码保护已开启' : '使用密码保护')"
+    :description="tx('记录保存在当前浏览器，可选择密码保护。')"
+  >
+    <template #body
+      ><form class="modal-stack" @submit.prevent="saveProtection">
+        <label class="flex items-center gap-2"
+          ><input type="checkbox" v-model="nextProtection" />{{ tx('使用密码保护') }}</label
+        >
+        <p v-if="!nextProtection">{{ tx('不设密码，记录将直接保存在此浏览器，打开即可查看。') }}</p>
+        <UButton
+          v-if="vault.passwordProtected.value && nextProtection && !changingPassword"
+          type="button"
+          color="neutral"
+          variant="outline"
+          @click="changingPassword = true"
+          >{{ tx('修改密码') }}</UButton
+        >
+        <UFormField v-if="needsNewPassword" :label="tx('新密码')"
+          ><UInput
+            v-model="newPassword"
+            type="password"
+            autocomplete="new-password"
+            :minlength="4"
+            required
+            class="w-full"
+        /></UFormField>
+        <UFormField v-if="needsNewPassword" :label="tx('再次输入口令')"
+          ><UInput
+            v-model="newConfirmation"
+            type="password"
+            autocomplete="new-password"
+            required
+            class="w-full"
+        /></UFormField>
+        <p v-if="error" role="alert">{{ tx(error) }}</p>
+        <UButton type="submit" :loading="vault.busy.value" :disabled="!protectionChanged">{{
+          tx('保存')
+        }}</UButton>
+      </form></template
+    >
+  </UModal>
+</template>
+<style scoped>
+.history-surface {
+  border-radius: var(--ui-radius);
+  background: var(--panel);
+  padding: 28px 32px;
+}
+.vault-gate {
+  max-width: 380px;
+  margin: 14px auto 24px;
+  text-align: center;
+}
+.vault-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.vault-gate h2 {
+  font-size: var(--text-section);
+  font-weight: 600;
+  margin: 0;
+}
+.vault-gate p {
+  font-size: var(--text-body);
+  line-height: 1.9;
+  color: var(--ui-text-muted);
+}
+.unlock-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin: 25px 0;
+  text-align: start;
+}
+.vault-gate .vault-note {
+  font-size: var(--text-caption);
+}
+.history-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.history-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  max-width: 100%;
+}
+.history-action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.history-search {
+  width: 260px;
+}
+.history-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--ui-text-muted);
+  font-size: var(--text-caption);
+  padding: 14px 0;
+  border-bottom: 1px solid var(--ui-border);
+}
+.history-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--ui-border);
+}
+.record-icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.record-icon img {
+  image-rendering: pixelated;
+}
+.record-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.record-edit {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  color: var(--ui-text-muted);
+  cursor: pointer;
+}
+.record-edit :deep(.iconify) {
+  width: 16px;
+  height: 16px;
+}
+.record-edit:hover,
+.record-edit:focus-visible {
+  color: var(--accent-ink);
+  background: var(--wash);
+}
+.record-edit:focus-visible {
+  outline: 2px solid var(--accent-ink);
+  outline-offset: 2px;
+}
+.record-title strong {
+  min-width: 0;
+  line-height: 1.5;
+}
+.record-name {
+  min-width: 0;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+.record-name strong {
+  font-size: var(--text-caption);
+  font-weight: 600;
+}
+.record-name p {
+  font-size: var(--text-caption);
+  line-height: 1.8;
+  margin-top: 4px;
+  color: var(--ui-text-muted);
+}
+.record-name small {
+  font-size: var(--text-caption);
+  color: var(--ui-text-muted);
+}
+.history-danger {
+  display: flex;
+  align-items: center;
+  margin-top: 14px;
+}
+.history-feedback {
+  padding: 12px 0;
+}
+input[type='checkbox'] {
+  accent-color: var(--action);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+@media (max-width: 600px) {
+  .history-surface {
+    padding: 24px 20px;
+  }
+  .history-row {
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr) 44px;
+    gap: 8px;
+  }
+  .record-name {
+    grid-column: 2 / -1;
+  }
+  .history-row :deep(.history-code) {
+    grid-column: 2;
+  }
+  .history-row > button {
+    grid-column: 3;
+  }
+  .history-actions {
+    width: 100%;
+  }
+  .history-toolbar {
+    gap: 12px;
+  }
+  .history-search {
+    width: 100%;
+  }
+  .record-icon {
+    display: none;
+  }
+}
+@media (pointer: coarse) {
+  .record-edit {
+    flex-basis: 44px;
+    width: 44px;
+    height: 44px;
+  }
+}
+</style>

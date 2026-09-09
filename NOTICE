@@ -1,0 +1,31 @@
+2fa.hot
+Copyright (c) 2026 LZSMIAO
+Original project: https://2fa.hot
+Source: https://github.com/LZSMIAO/2fa-hot
+
+Project-owned code and documentation in this release are licensed under the
+GNU Affero General Public License, version 3 only (AGPL-3.0-only), in LICENSE.
+Third-party materials are excluded and retain their own terms; see credits/.
+
+Reasonable attribution notice under AGPL section 7(b)
+Preserve the above copyright and source notices in copies of covered material.
+For a publicly deployed interactive website based on covered material, preserve
+an accessible, legible notice identifying 2fa.hot and linking to https://2fa.hot
+or the original source repository. The existing footer attribution is sufficient;
+an equivalent notice in the footer or an easily accessible About/legal page is
+also sufficient. No endorsement, tracking, or promotional placement is required.
+As an additional permission, an installation used solely for personal/local use
+need not display this notice on screen. Source notices must still be preserved.
+
+This does not replace AGPL obligations, including section 13's requirement for
+modified versions to prominently offer remotely interacting users access to the
+Corresponding Source of that version, at no charge. A fork must update its source
+link to the source actually used for its deployment while retaining origin credit.
+
+This notice does not claim rights over a general visual style, Minecraft assets,
+trademarks, or independently created implementations. Third-party rights remain
+with their owners. No separate restriction on AI-assisted modification applies.
+
+Previously distributed MIT versions remain available under their original terms.
+This release does not revoke those grants; LICENSES/MIT-legacy.txt preserves the
+historical license. Rewriting Git history does not change earlier permissions.

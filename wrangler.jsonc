@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "2fa-hot",
+  "account_id": "121b13ec0ac91a98fc40066177d3ae62",
+  "main": ".output/server/index.mjs",
+  "compatibility_date": "2026-09-07",
+  "compatibility_flags": ["nodejs_compat", "no_nodejs_compat_v2"],
+  "assets": {
+    "directory": ".output/public",
+    "binding": "ASSETS"
+  },
+  "workers_dev": true,
+  "routes": [{ "pattern": "2fa.hot/*", "zone_name": "2fa.hot" }],
+  "preview_urls": false,
+  "observability": {
+    "enabled": false,
+    "logs": { "enabled": false, "invocation_logs": false }
+  },
+  "logpush": false
+}
