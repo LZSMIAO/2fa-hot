@@ -160,13 +160,11 @@ try {
   await ui.locator('#delete-confirm').click()
   await ui.locator('#empty').waitFor({ state: 'visible' })
   await ui.locator('#import-section summary').click()
-  await ui
-    .locator('#import-file')
-    .setInputFiles({
-      name: 'restore.2fapasskeys',
-      mimeType: 'application/json',
-      buffer: Buffer.from(backup)
-    })
+  await ui.locator('#import-file').setInputFiles({
+    name: 'restore.2fapasskeys',
+    mimeType: 'application/json',
+    buffer: Buffer.from(backup)
+  })
   await ui.locator('#import-password').fill('backup-browser-test-123')
   await ui.locator('#import-form button').click()
   await ui.locator('#import-preview').waitFor({ state: 'visible' })

@@ -56,11 +56,7 @@ watch(open, (visible) => {
 </script>
 <template>
   <div class="history-toggle">
-    <div class="history-controls">
-      <NuxtLink class="history-view-link" :to="localePath('/history')" :title="tx('查看历史')">
-        {{ tx('本地历史') }}
-      </NuxtLink>
-
+    <div class="history-toggle-control">
       <button
         type="button"
         role="switch"
@@ -73,6 +69,9 @@ watch(open, (visible) => {
       >
         <span class="history-switch-thumb" />
       </button>
+      <NuxtLink class="history-view-link" :to="localePath('/history')" :title="tx('查看历史')">
+        {{ tx('本地历史') }}
+      </NuxtLink>
     </div>
     <span v-if="error && !open" role="alert">{{ tx(error) }}</span>
     <UModal
@@ -147,6 +146,16 @@ watch(open, (visible) => {
   gap: 0.5rem;
   white-space: nowrap;
   min-height: 2.75rem;
+}
+.history-toggle-control {
+  display: grid;
+  justify-items: center;
+  gap: 0.375rem;
+}
+.history-toggle-control .history-view-link {
+  min-height: 0;
+  font-size: var(--text-caption);
+  line-height: 1.5;
 }
 .history-controls {
   display: inline-flex;
