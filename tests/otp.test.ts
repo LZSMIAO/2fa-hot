@@ -68,8 +68,23 @@ test('URI parsing and sharing preserve options', () => {
   assert.equal(config.issuer, 'GitHub')
   assert.equal(config.label, 'work')
   assert.deepEqual(parseOtp(toOtpUri(config)), config)
-  assert.equal(toAccessPath(config), `/2fa/${DEMO_SECRET}?algorithm=SHA256&digits=8&period=60`)
-  assert.equal(toAccessPath(parseOtp(DEMO_SECRET)), `/2fa/${DEMO_SECRET}`)
+  assert.equal(toAccessPath(config), `/2fa#${DEMO_SECRET}?algorithm=SHA256&digits=8&period=60`)
+  assert.equal(toAccessPath(parseOtp(DEMO_SECRET)), `/2fa#${DEMO_SECRET}`)
+})
+test('fragment links keep secrets and options out of request URLs and preserve OTP results', async () => {
+  for (const prefix of ['', '/zh-TW', '/en']) {
+    const config = parseOtp(DEMO_SECRET, { algorithm: 'SHA-256', digits: 8, period: 60 })
+    const url = new URL(`https://2fa.hot${prefix}${toAccessPath(config)}`)
+    assert.equal(url.search, '')
+    assert.ok(!url.pathname.includes(DEMO_SECRET))
+    const parsed = parseOtp(url.href)
+    assert.deepEqual(parsed, config)
+    assert.equal(await generateOtp(parsed, 59000), await generateOtp(config, 59000))
+  }
+  assert.deepEqual(parseOtp(`https://2fa.hot/2fa/${DEMO_SECRET}`), parseOtp(DEMO_SECRET))
+  assert.throws(() => parseOtp(`https://2fa.hot/2fa/${DEMO_SECRET}#${DEMO_SECRET}`))
+  assert.throws(() => parseOtp(`https://2fa.hot/2fa?digits=8#${DEMO_SECRET}?digits=6`))
+  assert.throws(() => parseOtp('https://2fa.hot/2fa#%ZZ'))
 })
 test('invalid secrets, options and ambiguous URI rejected', () => {
   for (const value of ['', '123456', 'invalid!', 'A'.repeat(33)])

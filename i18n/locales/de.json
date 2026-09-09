@@ -396,5 +396,6 @@
   "m8e86f9b1d54f": "Code-Link kopieren",
   "m556abb72cf15": "Erklärung vorlesen",
   "m2bcd8a47b409": "Sprachausgabe ausschalten",
-  "m1488f5d38990": "Die Sprachausgabe ist in diesem Browser nicht verfügbar. Du kannst mit der schriftlichen Anleitung fortfahren."
+  "m1488f5d38990": "Die Sprachausgabe ist in diesem Browser nicht verfügbar. Du kannst mit der schriftlichen Anleitung fortfahren.",
+  "fragmentPrivacy": "Neue Links enthalten den Schlüssel hinter # zur lokalen Verarbeitung im Browser. Er wird nicht mit der Seitenanfrage gesendet. Der vollständige Link enthält den Schlüssel; teile ihn nicht öffentlich."
 }

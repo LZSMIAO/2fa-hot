@@ -1,3 +1,4 @@
+import { supportedLocales } from '../../shared/locales.ts'
 export type Algorithm = 'SHA-1' | 'SHA-256' | 'SHA-512'
 export interface OtpConfig {
   secret: string
@@ -59,34 +60,41 @@ export function validateOptions(options: Partial<OtpConfig>): OtpConfig {
 export function parseOtp(raw: string, options: Partial<OtpConfig> = {}): OtpConfig {
   if (raw.length > 8192) throw new Error('输入过长，请检查密钥或配置链接。')
   const input = raw.trim()
-  if (/^https?:\/\//i.test(input) || input.startsWith('/2fa/')) {
+  if (/^https?:\/\//i.test(input) || input.startsWith('/2fa')) {
     let link: URL
     try {
       link = new URL(input, 'https://2fa.hot')
     } catch {
       throw new Error('配置链接格式不正确。')
     }
+    const parts = link.pathname.split('/')
+    if (supportedLocales.some((locale) => locale.code === parts[1])) parts.splice(1, 1)
+    const path = parts.join('/')
+    const fragmentLink = /^\/2fa\/?$/.test(path) && !!link.hash
     if (
       !['2fa.hot', 'www.2fa.hot', 'localhost', '127.0.0.1', '[::1]'].includes(link.hostname) ||
       link.username ||
       link.password ||
-      link.hash ||
-      !/^\/2fa\/[^/]+\/?$/.test(link.pathname)
+      (!fragmentLink && (link.hash || !/^\/2fa\/[^/]+\/?$/.test(path)))
     )
       throw new Error('仅支持 TOTP 配置，不支持 HOTP 或其他链接。')
+    const [fragmentSecret = '', fragmentQuery = ''] = link.hash.slice(1).split('?')
+    const parameters = new URLSearchParams(link.search)
+    if (fragmentLink)
+      new URLSearchParams(fragmentQuery).forEach((value, name) => parameters.append(name, value))
     for (const name of ['algorithm', 'digits', 'period'])
-      if (link.searchParams.getAll(name).length > 1) throw new Error('配置链接含有重复参数。')
+      if (parameters.getAll(name).length > 1) throw new Error('配置链接含有重复参数。')
     let secret: string
     try {
-      secret = decodeURIComponent(link.pathname.split('/')[2]!)
+      secret = decodeURIComponent(fragmentLink ? fragmentSecret : parts[2]!)
     } catch {
       throw new Error('配置链接格式不正确。')
     }
     return validateOptions({
       secret,
-      algorithm: algorithmFrom(link.searchParams.get('algorithm') || 'SHA1'),
-      digits: Number(link.searchParams.get('digits') || 6) as 6 | 8,
-      period: Number(link.searchParams.get('period') || 30)
+      algorithm: algorithmFrom(parameters.get('algorithm') || 'SHA1'),
+      digits: Number(parameters.get('digits') || 6) as 6 | 8,
+      period: Number(parameters.get('period') || 30)
     })
   }
   if (!/^otpauth:/i.test(input)) return validateOptions({ ...options, secret: input })
@@ -171,7 +179,7 @@ export function toAccessPath(config: OtpConfig): string {
   if (c.algorithm !== 'SHA-1') query.set('algorithm', c.algorithm.replace(/-/g, ''))
   if (c.digits !== 6) query.set('digits', String(c.digits))
   if (c.period !== 30) query.set('period', String(c.period))
-  return `/2fa/${c.secret}${query.size ? `?${query}` : ''}`
+  return `/2fa#${c.secret}${query.size ? `?${query}` : ''}`
 }
 export function groupCode(code: string) {
   return code.length === 8

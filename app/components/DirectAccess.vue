@@ -13,7 +13,7 @@ const { tx } = useMessages()
 import { parseOtp, algorithmFrom, toAccessPath, identity, type OtpConfig } from '~/utils/otp'
 const expandedConfig = useState<OtpConfig | null>('expanded-otp-config', () => null)
 onBeforeRouteLeave((to) => {
-  if (!unlocalizedPath(to.path).startsWith('/2fa/')) expandedConfig.value = null
+  if (!/^\/2fa(?:\/|$)/.test(unlocalizedPath(to.path))) expandedConfig.value = null
 })
 const route = useRoute()
 const input = shallowRef(''),
@@ -41,20 +41,27 @@ watch([input, composing], (_, __, onCleanup) => {
   }, 300)
   onCleanup(() => clearTimeout(timer))
 })
-const missing = computed(() => !route.params.secret)
+const fragment = shallowRef('')
+const missing = computed(() => !route.params.secret && !fragment.value)
 function load() {
   config.value = null
   issue.value = ''
-  if (!route.params.secret) return
+  fragment.value = route.hash
+  if (!route.params.secret && !fragment.value) return
   try {
     const options = route.query
     for (const name of ['algorithm', 'digits', 'period'])
       if (Array.isArray(options[name])) throw new Error('链接参数重复，请检查链接。')
-    config.value = parseOtp(String(route.params.secret), {
-      algorithm: algorithmFrom(String(options.algorithm ?? 'SHA1')),
-      digits: Number(options.digits ?? 6) as 6 | 8,
-      period: Number(options.period ?? 30)
-    })
+    if (route.params.secret && fragment.value) throw new Error('配置链接格式不正确。')
+    config.value = fragment.value
+      ? parseOtp(
+          `https://2fa.hot/2fa${new URL(route.fullPath, 'https://2fa.hot').search}${fragment.value}`
+        )
+      : parseOtp(String(route.params.secret), {
+          algorithm: algorithmFrom(String(options.algorithm ?? 'SHA1')),
+          digits: Number(options.digits ?? 6) as 6 | 8,
+          period: Number(options.period ?? 30)
+        })
     if (expandedConfig.value && identity(expandedConfig.value) === identity(config.value)) {
       config.value = {
         ...config.value,

@@ -39,17 +39,19 @@ I know this won't change today's fast-paced life, or stop any of that. This is a
 Fine, fine, I know you don't like reading. Enough with the grand narrative. This site is actually here to help my friends log into multiple accounts for their online shops and e-commerce projects. And maybe one day it'll get enough traffic for me to slap ads on it and get rich :P
 </details>
 
+If another code website places a secret in a URL path or query, such as `/2fa/SECRET` or `?secret=SECRET`, opening the link directly sends the secret in an HTTP request. The remote website service or CDN receives that data and may record and retain it through access logs, monitoring or application logging. Whether it is actually recorded, and for how long, depends on that site's settings and policies.
+
 ## Domain drama
 
 I originally wanted 2fa.mc, but gave up because I couldn't register **2FA®** to submit to Monaco's domain registry...
 
-What if I kept a straight face while writing this? Then .HOT came along. Fine, fine, I'll admit it: that's sexy. We're so back.
+What if I kept a straight face while writing this? Then .HOT came along. Fine, fine, I'll admit it: that's sexy. We're going back.
 
 ## What exactly can it do
 
 - Single / batch codes: supports Base32 secret keys and otpauth:// configuration links.
 - QR import: images, drag and drop, and camera; supports Google Authenticator export QR codes, multiple accounts and multi-part exports. Collect all parts, then choose the accounts you need.
-- Direct links: open [https://2fa.hot/2fa/YOUR_SECRET](https://2fa.hot/2fa/YOUR_SECRET) to display the current verification code directly.
+- Direct links: open [https://2fa.hot/2fa#YOUR_SECRET](https://2fa.hot/2fa#YOUR_SECRET) to display the current verification code directly. The secret stays after `#` for local browser processing and is not sent to the remote service in the HTTP page request.
 - Local history: saving is off by default and can be enabled manually; password protection can be enabled or disabled at any time, with backup and restore support.
 - 30 languages: mobile layouts and light / dark themes; if you don't know how to use it, open the guide and follow the diamond sword.
 
@@ -69,7 +71,7 @@ Google Authenticator import: select “Transfer accounts → Export accounts” 
 
 Code generation on the homepage and QR recognition happen entirely in your browser. Once you enable local history, records are stored in your browser. Code generation, QR recognition and history storage all happen locally. You can also set a password for encryption, or leave it unset and view records directly.
 
-Direct links contain the full secret key in the URL path. Opening a link sends that URL, including the key, to the website hosting service as part of the page request; codes are still calculated in your browser. A request containing a key does not mean the key has been saved in logs. Whether request URLs are retained depends on the service's logging settings, and the URL may also remain in browser history. Pasting a key into the homepage input does not put it in the page request URL. | Don't put real links, QR codes or secret keys in public screenshots or Issues, or give them to people you don't trust. If you forget your local-history passphrase, the website cannot recover it for you.
+New direct links use `/2fa#SECRET`. The browser reads the secret and verification parameters after # locally; they are not sent with the page request. Legacy `/2fa/SECRET` links still work, but their path sends the secret to the hosting service. Full links still contain secrets and may remain in browser history. Do not share them publicly or with people you do not trust. Forgotten local-history passphrases cannot be recovered.
 
 [Privacy](https://2fa.hot/privacy)
 

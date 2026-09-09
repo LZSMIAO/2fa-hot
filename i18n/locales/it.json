@@ -396,5 +396,6 @@
   "m8e86f9b1d54f": "Copia link del codice",
   "m556abb72cf15": "Riproduci narrazione",
   "m2bcd8a47b409": "Disattiva narrazione",
-  "m1488f5d38990": "La narrazione non è disponibile in questo browser. Puoi continuare con il tutorial scritto."
+  "m1488f5d38990": "La narrazione non è disponibile in questo browser. Puoi continuare con il tutorial scritto.",
+  "fragmentPrivacy": "I nuovi link inseriscono la chiave dopo # per elaborarla localmente nel browser, senza inviarla con la richiesta della pagina. Il link completo contiene la chiave; non condividerlo pubblicamente."
 }

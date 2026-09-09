@@ -53,7 +53,7 @@ onMounted(() => {
     <h2 id="links">{{ tx('通过链接取码') }}</h2>
     <p>
       {{ tx('生成有效验证码后，点击“获取链接”。链接形式为')
-      }}<code dir="ltr">https://2fa.hot/2fa/{{ tx('密钥') }}</code
+      }}<code dir="ltr">https://2fa.hot/2fa#{{ tx('密钥') }}</code
       >{{ tx('，打开后立即显示验证码。非默认算法、位数和周期会自动包含在链接参数中。') }}
     </p>
     <p>

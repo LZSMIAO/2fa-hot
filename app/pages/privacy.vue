@@ -20,6 +20,14 @@ const { tx } = useMessages()
     </p>
     <h2>{{ tx('获取链接：地址中包含密钥') }}</h2>
     <p>
+      <code dir="ltr">/2fa#YOUR_SECRET</code> —
+      {{
+        tx(
+          '新链接将密钥放在 # 后面，由浏览器读取和计算，不随页面请求发送。完整链接仍包含密钥，请勿公开分享。'
+        )
+      }}
+    </p>
+    <p>
       <code dir="ltr">/2fa/YOUR_SECRET</code
       >{{
         tx(

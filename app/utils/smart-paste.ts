@@ -94,7 +94,7 @@ export function analyzePaste(text: string): PasteAnalysis {
   let allStructured = true
   for (const { source, line } of lines) {
     // Reject an invalid URI as a whole; its secret parameter is not a fallback key.
-    if (/^[a-z][\w+.-]*:\/\//i.test(source) || source.startsWith('/2fa/')) {
+    if (/^[a-z][\w+.-]*:\/\//i.test(source) || source.startsWith('/2fa')) {
       const config = tryParse(source)
       if (config) candidates.push({ config, line, source })
       else allStructured = false

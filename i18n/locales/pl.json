@@ -396,5 +396,6 @@
   "m8e86f9b1d54f": "Kopiuj link do kodu",
   "m556abb72cf15": "Odtwórz narrację",
   "m2bcd8a47b409": "Wyłącz narrację",
-  "m1488f5d38990": "Narracja nie jest dostępna w tej przeglądarce. Możesz kontynuować, korzystając z instrukcji tekstowej."
+  "m1488f5d38990": "Narracja nie jest dostępna w tej przeglądarce. Możesz kontynuować, korzystając z instrukcji tekstowej.",
+  "fragmentPrivacy": "Nowe linki umieszczają klucz po # do lokalnego odczytu i obliczeń w przeglądarce, bez wysyłania go z żądaniem strony. Pełny link zawiera klucz; nie udostępniaj go publicznie."
 }

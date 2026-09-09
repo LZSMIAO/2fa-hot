@@ -396,5 +396,6 @@
   "m8e86f9b1d54f": "Copy code link",
   "m556abb72cf15": "Play narration",
   "m2bcd8a47b409": "Turn off narration",
-  "m1488f5d38990": "Narration is unavailable in this browser. You can continue with the written tutorial."
+  "m1488f5d38990": "Narration is unavailable in this browser. You can continue with the written tutorial.",
+  "fragmentPrivacy": "New links put the secret after # for the browser to read and calculate locally. It is not sent with the page request. The full link still contains the secret; do not share it publicly."
 }

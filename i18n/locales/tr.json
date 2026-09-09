@@ -396,5 +396,6 @@
   "m8e86f9b1d54f": "Kod bağlantısını kopyala",
   "m556abb72cf15": "Sesli anlatımı oynat",
   "m2bcd8a47b409": "Sesli anlatımı kapat",
-  "m1488f5d38990": "Bu tarayıcıda sesli anlatım kullanılamıyor. Yazılı eğitimle devam edebilirsiniz."
+  "m1488f5d38990": "Bu tarayıcıda sesli anlatım kullanılamıyor. Yazılı eğitimle devam edebilirsiniz.",
+  "fragmentPrivacy": "Yeni bağlantılar anahtarı # sonrasına yerleştirir; tarayıcıda okunur ve hesaplanır, sayfa isteğiyle gönderilmez. Tam bağlantı anahtarı içerir; herkese açık paylaşmayın."
 }

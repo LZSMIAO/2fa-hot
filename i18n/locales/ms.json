@@ -396,5 +396,6 @@
   "m8e86f9b1d54f": "Salin pautan kod",
   "m556abb72cf15": "Mainkan penerangan suara",
   "m2bcd8a47b409": "Matikan penerangan suara",
-  "m1488f5d38990": "Penerangan suara tidak tersedia dalam pelayar ini. Anda boleh meneruskan dengan panduan bertulis."
+  "m1488f5d38990": "Penerangan suara tidak tersedia dalam pelayar ini. Anda boleh meneruskan dengan panduan bertulis.",
+  "fragmentPrivacy": "Pautan baharu meletakkan kunci selepas # untuk dibaca dan dikira dalam pelayar tanpa dihantar bersama permintaan halaman. Pautan penuh masih mengandungi kunci; jangan kongsikannya secara terbuka."
 }
