@@ -30,15 +30,26 @@ export function useSiteSeo() {
     if (path === '/help') {
       title = `${tx('使用说明')} · 2FA & TOTP | 2fa.hot`
       description =
-        tx('输入格式、验证参数，以及常见问题。') +
-        ' ' +
-        tx('确保算法、位数、更新周期与原服务一致。默认 SHA-1、6 位、30 秒。')
+        language === 'en'
+          ? 'Learn how to generate TOTP codes, import QR exports, process batch secrets and troubleshoot invalid 2FA codes.'
+          : language === 'zh-CN'
+            ? '了解如何生成 TOTP 验证码、导入 QR 二维码、批量处理密钥，并排查 2FA 验证码无效问题。'
+            : language === 'zh-TW'
+              ? '了解如何產生 TOTP 驗證碼、匯入 QR 碼、批次處理密鑰，並排查 2FA 驗證碼無效問題。'
+              : tx('输入格式、验证参数，以及常见问题。')
     } else if (path === '/privacy') {
       title = tx('隐私说明 — 2fa.hot')
       description =
         tx('密钥如何计算、保存和传递。') + ' ' + tx('记录保存在当前浏览器，可选择密码保护。')
     } else if (path === '/about') {
-      title = `${tx('关于')} | 2fa.hot`
+      title =
+        language === 'en'
+          ? 'About 2fa.hot — local 2FA/TOTP code generation'
+          : language === 'zh-CN'
+            ? '关于 2fa.hot — 本地 2FA/TOTP 验证码工具'
+            : language === 'zh-TW'
+              ? '關於 2fa.hot — 本地 2FA/TOTP 驗證碼工具'
+              : `${tx('关于')} | 2fa.hot`
       description = toolDescriptions[language] || toolDescriptions.en
     } else if (path === '/guides') {
       title = `${guideTitle} | 2fa.hot`
@@ -92,7 +103,9 @@ export function useSiteSeo() {
             'Google Authenticator migration import',
             'Optional local history'
           ],
-          license: 'https://opensource.org/license/mit',
+          license: 'https://www.gnu.org/licenses/agpl-3.0.html',
+          isFamilyFriendly: true,
+          sameAs: ['https://github.com/LZSMIAO/2fa-hot'],
           image
         })
       if (path !== '/') {
@@ -148,12 +161,18 @@ export function useSiteSeo() {
               { property: 'og:image', content: image },
               { property: 'og:image:width', content: '1200' },
               { property: 'og:image:height', content: '630' },
-              { property: 'og:image:alt', content: '2fa.hot — 2FA & TOTP code generator' },
+              {
+                property: 'og:image:alt',
+                content: title
+              },
               { name: 'twitter:card', content: 'summary_large_image' },
               { name: 'twitter:title', content: title },
               { name: 'twitter:description', content: description },
               { name: 'twitter:image', content: image },
-              { name: 'twitter:image:alt', content: '2fa.hot — 2FA & TOTP code generator' }
+              {
+                name: 'twitter:image:alt',
+                content: title
+              }
             ]
           : [])
       ],

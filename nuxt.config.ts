@@ -20,7 +20,10 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css', '~/assets/css/ore.css'],
   devtools: { enabled: false },
   experimental: { viewTransition: true },
-  nitro: { cloudflare: { nodeCompat: true } },
+  nitro: {
+    cloudflare: { nodeCompat: true },
+    plugins: ['~~/server/plugins/security-headers']
+  },
   ui: { fonts: false },
   icon: {
     provider: 'server',
@@ -31,12 +34,17 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'en' },
-      title: 'Free 2FA & TOTP Code Generator | 2fa.hot',
+      title:
+        '2FA.HOT | Online two-factor code generation | Secure OTP codes | Elegant authenticator inspired by Minecraft design',
       meta: [
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1, viewport-fit=cover'
+        },
         {
           name: 'description',
           content:
-            'Generate 2FA codes from your existing TOTP secret in your browser. Free, with batch codes, QR import and optional local history.'
+            '2FA.HOT is an elegant Minecraft-inspired online 2FA/TOTP authenticator and OTP code generator. Paste a Base32 secret or otpauth:// URI to generate codes locally in your browser. Import QR codes, migrate Google Authenticator accounts, process batches, use optional encrypted local history and share fragment links that keep secrets out of page requests.'
         }
       ],
       link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }]

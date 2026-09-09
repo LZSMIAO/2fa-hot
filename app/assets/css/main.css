@@ -68,10 +68,12 @@
 }
 html {
   overflow-x: clip;
+  touch-action: manipulation;
 }
 body {
   width: 100%;
   overflow-x: clip;
+  touch-action: manipulation;
   margin: 0;
   background: var(--canvas);
   color: var(--ui-text);

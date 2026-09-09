@@ -297,7 +297,7 @@ onBeforeUnmount(() => {
         <p>{{ tx(steps[activeStep]!.detail) }}</p>
       </div>
       <p class="tutorial-link-tip">
-        {{ tx('通过链接取码') }}：<code dir="ltr">2fa.hot/2fa/{{ tx('密钥') }}</code>
+        {{ tx('通过链接取码') }}：<code dir="ltr">https://2fa.hot/2fa#{{ tx('密钥') }}</code>
         <span>{{ tx('把链接末尾的“密钥”换成你自己的完整密钥，打开就能查看当前验证码。') }}</span>
         <NuxtLink :to="localePath('/help#links')" @click="emit('close')"
           >{{ tx('使用说明') }} ↗</NuxtLink

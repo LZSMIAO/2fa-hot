@@ -256,9 +256,9 @@ onBeforeUnmount(() => {
 }
 @media (max-width: 700px), (max-height: 500px) and (pointer: coarse) {
   .title-panorama {
-    height: 100lvh;
-    bottom: auto;
-    --face-size: max(100vw, 100lvh);
+    inset: 0 auto auto 0;
+    height: 100svh;
+    --face-size: max(100vw, 100svh);
   }
   .panorama-control {
     position: absolute;
