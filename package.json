@@ -40,7 +40,7 @@
     "vue-tsc": "3.3.11",
     "wrangler": "4.129.1"
   },
-  "description": "Browser-based TOTP tool with QR import and optional encrypted local history",
+  "description": "Minecraft-inspired 2FA / TOTP tool with local code generation, batch processing, QR import and fragment links",
   "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",

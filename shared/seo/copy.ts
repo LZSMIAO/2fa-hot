@@ -2,9 +2,9 @@ import type { SupportedLocale } from '../locales'
 
 // Localize the product title and purpose; retain standard 2FA / TOTP terminology.
 export const toolHeadings: Record<SupportedLocale, string> = {
-  en: 'Minecraft-inspired Authenticator | 2FA / TOTP · Batch codes',
-  'zh-CN': 'Minecraft 风格双重验证器 | 2FA / TOTP Authenticator · 批量取码',
-  'zh-TW': 'Minecraft 風格雙重驗證器 | 2FA / TOTP Authenticator · 批次取碼',
+  en: 'Minecraft-inspired 2FA tool',
+  'zh-CN': 'Minecraft 风格 2FA 工具',
+  'zh-TW': 'Minecraft 風格 2FA 工具',
   es: 'Autenticador estilo Minecraft | 2FA / TOTP Authenticator · Códigos por lotes',
   fr: 'Authentificateur au style Minecraft | 2FA / TOTP Authenticator · Codes par lots',
   de: 'Authenticator im Minecraft-Stil | 2FA / TOTP · Mehrere Codes',
@@ -35,11 +35,11 @@ export const toolHeadings: Record<SupportedLocale, string> = {
 }
 
 export const toolDescriptions: Record<SupportedLocale, string> = {
-  en: 'Minecraft-inspired online 2FA code generator with TOTP, batch code generation and QR import. Runs in your browser, with no sign-up and optional encrypted local history.',
+  en: 'A Minecraft-inspired 2FA / TOTP tool. Paste a secret to get codes locally, with batch processing, QR import and fragment-based direct links.',
   'zh-CN':
-    'Minecraft 风格的在线 2FA 验证码生成器，支持 TOTP 动态验证码生成、批量获取与二维码导入。浏览器内计算，无需注册，可选本地加密历史。',
+    '以 Minecraft 风格为设计参考的多功能在线 2FA 工具。贴上已有密钥，取得当前验证码。支持片段直链，取码全由本地处理。',
   'zh-TW':
-    'Minecraft 風格的線上 2FA 驗證碼產生器，支援 TOTP 動態驗證碼產生、批次取碼與 QR Code 匯入。瀏覽器內計算，無需註冊，可選本機加密歷史。',
+    '以 Minecraft 風格為設計參考的多功能線上 2FA 工具。貼上已有密鑰，取得目前驗證碼。支援片段直鏈，取碼全由本地處理。',
   es: 'Generador de códigos 2FA en línea con estilo Minecraft. Admite TOTP, generación por lotes e importación QR. Funciona en el navegador, sin registro y con historial local cifrado opcional.',
   fr: 'Générateur de codes 2FA en ligne au style Minecraft. Codes TOTP, génération par lots et import QR. Calcul dans le navigateur, sans inscription, avec historique local chiffré en option.',
   de: 'Online-Generator für 2FA-Codes im Minecraft-Stil. TOTP-Codes, mehrere Codes gleichzeitig und QR-Import. Berechnung im Browser, ohne Registrierung, mit optional verschlüsseltem lokalem Verlauf.',

@@ -1,14 +1,16 @@
-# 2fa.hot
+# 2FA.HOT
 
 <!-- website:intro:start -->
 
-An online multifunctional 2FA tool designed in the style of Minecraft. Just paste an existing secret key to get and copy the current verification code.
+A multifunctional online 2FA tool inspired by Minecraft. Paste an existing secret to get the current verification code. Supports fragment links, with code generation handled locally.
 
-More related features are being integrated… It not only automatically recognizes batch data, but also recognizes multiple forms of secret keys—whether it's the fucking idiotic format you copied from an Excel sheet, or your customer doesn't know how to use it and copies the password and secret key together, it can recognize it and give the corresponding prompts.
+More features are being integrated…
 
-Of course—our website takes very good care of your idiot customers' intelligence.
+It automatically detects and switches to batch data, and recognizes multiple secret formats—whether it is some fucked-up format copied from Excel, or your customers not knowing what they are doing and copying their password along with the secret, it recognizes the input and gives the appropriate prompts.
 
-Introducing: the accessibility guide. You can even choose one-on-one voice guidance on how to use a secret key to log into an account!
+Introducing:
+
+An accessible guide. Optional voice narration teaches you one-on-one how to use a secret to log into an account!
 
 <!-- website:intro:end -->
 
@@ -22,56 +24,57 @@ Introducing: the accessibility guide. You can even choose one-on-one voice guida
 
 <!-- website:body:start -->
 
-## Why I made this? Why reinvent the wheel?
-
-...Around 2021, the Fourth Industrial Revolution, humanity entered the AI era. Since then, I often see people abusing it—even professional programmers pulling this shit—taking just 5 minutes to generate a fucking gradient, misaligned frontend with 100 different UI design styles and 1,000 elements. They can even sell it to gray-market users and make a fortune. It makes me sick. I crawled out of bed and threw up again and again. Unfortunately, I wasn’t caught steadily.
-
-Most of 2fa.hot was built through vibe coding, taking 4 hours from scratch to launch—of course, I used it to revise things until they were almost presentable before going live—just like some projects my colleagues and I work on. We revise them again and again until they meet our aesthetic standards, until they have never gone live. Some projects might become familiar to you in the future, although you won't know we made them. Just like when I first opened Premiere pro 6 years ago and kept editing my videos until they were nearly perfect—you don't know that some videos were made by me either.
-
-I'm not against AI. I studied the humanities. Without AI, I might not even know how the fuck to put a website online. I just hope certain people can use AI well. It can help you do things, but it can never become you. Ever.
-
-I know this won't change today's fast-paced life, or stop any of that. This is all I can do.
-
----
-
-<details>
-<summary>Hidden text</summary>
-Fine, fine, I know you don't like reading. Enough with the grand narrative. This site is actually here to help my friends log into multiple accounts for their online shops and e-commerce projects. And maybe one day it'll get enough traffic for me to slap ads on it and get rich :P
-</details>
-
-If another code website places a secret in a URL path or query, such as `/2fa/SECRET` or `?secret=SECRET`, opening the link directly sends the secret in an HTTP request. The remote website service or CDN receives that data and may record and retain it through access logs, monitoring or application logging. Whether it is actually recorded, and for how long, depends on that site's settings and policies.
-
-## Domain drama
-
-I originally wanted 2fa.mc, but gave up because I couldn't register **2FA®** to submit to Monaco's domain registry...
-
-What if I kept a straight face while writing this? Then .HOT came along. Fine, fine, I'll admit it: that's sexy. We're going back.
-
 ## What exactly can it do
 
-- Single / batch codes: supports Base32 secret keys and otpauth:// configuration links.
-- QR import: images, drag and drop, and camera; supports Google Authenticator export QR codes, multiple accounts and multi-part exports. Collect all parts, then choose the accounts you need.
-- Direct links: open [https://2fa.hot/2fa#YOUR_SECRET](https://2fa.hot/2fa#YOUR_SECRET) to display the current verification code directly. The secret stays after `#` for local browser processing and is not sent to the remote service in the HTTP page request.
-- Local history: saving is off by default and can be enabled manually; password protection can be enabled or disabled at any time, with backup and restore support.
-- 30 languages: mobile layouts and light / dark themes; if you don't know how to use it, open the guide and follow the diamond sword.
+- Single and batch codes: supports Base32 secrets and otpauth:// configuration links.
+- QR import: images, drag and drop, or camera; supports Google Authenticator exports, multiple accounts and multi-part exports. Collect all parts, then select the accounts you need.
+- Direct links: open [https://2fa.hot/2fa#YOUR_SECRET](https://2fa.hot/2fa#YOUR_SECRET) to see the current code. The secret stays after `#`, read and processed locally in your browser without being sent to the remote service in the HTTP page request.
+- Local history: off by default, with opt-in storage; enable or remove password protection whenever you want, with backup and restore.
+- 30 languages: mobile layouts and light/dark themes. Need help? Follow the diamond sword through the tutorial.
 
-Supports TOTP, SHA-1 / SHA-256 / SHA-512, and 6- / 8-digit codes. HOTP and Steam-specific formats are not used to generate codes; HOTP / MD5 accounts in migration files can be decoded and exported.
+Supports TOTP, SHA-1/SHA-256/SHA-512 and 6/8-digit codes. HOTP and Steam-specific formats do not generate codes here; HOTP/MD5 accounts in migration files can be parsed and exported.
+
+Google Authenticator import: choose “Transfer accounts → Export accounts” in Google Authenticator, then scan/upload through “Import QR code → Google Authenticator” here to export your secrets elsewhere.
 
 …And More
 
 ## How to use it
 
-1. Find your existing 2FA secret key. It may be one you saved earlier or one somebody gave you. It is not a login password or a six-digit code.
-2. Paste the key at 2fa.hot, or import a QR code.
-3. Copy the current verification code into the website or app that needs verification. If it's about to expire, wait for the next one.
-
-Google Authenticator import: select “Transfer accounts → Export accounts” in the app, then scan or upload through “Import QR code → Google Authenticator” here. Import every QR code in a multi-part export. Duplicate scans are automatically deduplicated.
+1. Copy your 2FA secret and paste it into 2fa.hot, or import a QR code.
+2. Copy the current code before the countdown ends and enter it in the website or app requesting verification. If it is about to expire, wait for the next one.
+3. Generate direct links processed locally, with one-click copying or batch generation.
 
 ## Where the secret keys go
 
-Code generation on the homepage and QR recognition happen entirely in your browser. Once you enable local history, records are stored in your browser. Code generation, QR recognition and history storage all happen locally. You can also set a password for encryption, or leave it unset and view records directly.
+Homepage code generation and QR recognition happen entirely in your browser.
 
-New direct links use `/2fa#SECRET`. The browser reads the secret and verification parameters after # locally; they are not sent with the page request. Legacy `/2fa/SECRET` links still work, but their path sends the secret to the hosting service. Full links still contain secrets and may remain in browser history. Do not share them publicly or with people you do not trust. Forgotten local-history passphrases cannot be recovered.
+When you enable local history, records are stored in your browser. Code generation, QR recognition and history storage all happen locally. You can set a password for encryption, or leave it unset and view records directly.
+
+New direct links use `/2fa#SECRET`. The secret and verification parameters after `#` are read locally by your browser and are not sent to the hosting service with the page request. Legacy `/2fa/SECRET` links still work, but their path sends the secret to the hosting service. The project's deployment settings disable Workers logs and Logpush; this does not change how legacy links transmit secrets. Full links still contain secrets and may remain in browser history, so we do not recommend legacy path-based links.
+
+Finally, do not share them publicly or with anyone you do not trust. Forgotten local-history passphrases cannot be recovered.
+
+## Domain drama
+
+I originally wanted 2fa.mc, but gave up because I couldn't register **2FA®** to submit to Monaco's domain registry.
+
+...What if I kept a straight face while writing this? Then .HOT came along. Fine, fine, I'll admit it: that's sexy. We're going back.
+
+## Why I made this? Reinventing the wheel?
+
+I've used plenty of similar online tools that generate codes through direct links. If you didn't know, opening a URL containing a secret, such as `/2fa/SECRET` or `?secret=SECRET`, sends the secret in an HTTP request. The remote website service or CDN receives that data and can record and retain it through access logs, monitoring or application logging. In other words, secrets in those requests may be stored in plain text; if you also pasted an account + password + 2FA, and the site uploaded and retained those too... BOOM! Of course, whether it actually retains them depends on its implementation, settings and privacy policy :))
+
+...Around 2021, the Fourth Industrial Revolution, humanity entered the AI era. Since then, I keep seeing people abusing it—even professional programmers pulling this shit—taking just 5 minutes to generate a fucking gradient, misaligned frontend with 100 different UI design styles and 1,000 elements.
+
+Like certain people who won't even dare reply to my messages, using AI to throw together a shoddy garbage system and making a fortune selling it to gray-market users.
+
+…All of this makes me sick. I crawled out of bed and threw up again and again. Unfortunately, I wasn’t caught steadily.
+
+Everything I want to do, rich people have already done. Almost all of 2fa.hot was made through Vibe Coding—of course, I revised it until I was barely satisfied before launching. Like some projects my colleagues and I work on, we want to launch soon, but can't stop revising them until they meet our standards, until they have never gone live. Some projects might one day become familiar to those of you reading this, although you won't know we made them. It feels like going back six years, opening Premiere Pro, throwing myself into creating and never getting tired of it. Yet now I can't make videos anymore. It makes you think.
+
+Everything I want to say has been said before. I'm not against AI. Six years ago, I studied the humanities; I might not even have known how the fuck to put a website online. I hope certain people can use AI well. It can help you do things, but it can never become you. Ever. Please don't let it replace your thoughts or your life; don't use it to produce a design you can't even be bothered to play with yourself, full of bugs and logic that ruin the experience… Open it on localhost and polish it another 100 times. Otherwise, it isn't yours. Don't release it and disgust everyone. Sell it? You don't deserve to. You'll just keep scrambling around in gray-market industries.
+
+The fairness I want is all a fiction invented by the unfair. I know I can't change today's fast-paced life, or stop those things. Them.
 
 [Privacy](https://2fa.hot/privacy)
 

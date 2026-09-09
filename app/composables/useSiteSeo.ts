@@ -38,10 +38,8 @@ export function useSiteSeo() {
       description =
         tx('密钥如何计算、保存和传递。') + ' ' + tx('记录保存在当前浏览器，可选择密码保护。')
     } else if (path === '/about') {
-      title = `${tx('关于')} 2fa.hot · ${chinese ? '2FA 多功能工具' : 'Multifunctional 2FA tool'}`
-      description = chinese
-        ? '了解 2FA Hot（2fa.hot）：Minecraft 风格的 2FA / TOTP 多功能工具，在浏览器内取码，支持批量生成、二维码导入与可选本地历史。查看项目介绍、设计来源和联系方式。'
-        : 'Meet 2FA Hot (2fa.hot), a Minecraft-inspired multifunctional 2FA and TOTP tool with batch codes, QR import and optional local history. Explore its project information, design origins and contact details.'
+      title = `${tx('关于')} | 2fa.hot`
+      description = toolDescriptions[language] || toolDescriptions.en
     } else if (path === '/guides') {
       title = `${guideTitle} | 2fa.hot`
       description = chinese
