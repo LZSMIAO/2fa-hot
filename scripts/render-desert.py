@@ -70,8 +70,13 @@ out=[f'<svg xmlns="http://www.w3.org/2000/svg" width="544" height="440" viewBox=
 for name,slope in [('front',.9),('right',.72)]:
     out.append(f'<filter id="{name}" color-interpolation-filters="sRGB"><feComponentTransfer><feFuncR type="linear" slope="{slope}"/><feFuncG type="linear" slope="{slope}"/><feFuncB type="linear" slope="{slope}"/></feComponentTransfer></filter>')
 out.append('</defs>')
+# A continuous sand silhouette prevents subpixel cracks between adjacent tiles
+# from exposing the page background. Individual textured faces retain their shading.
+sand_outline = [(0,16,0),(64,16,0),(64,0,0),(64,0,48),(0,0,48),(0,16,48)]
+sand_points = ' '.join(f'{px},{py}' for px,py in map(project,sand_outline))
+out.append(f'<polygon points="{sand_points}" fill="#c9c29a"/>')
 background = out.copy()
-character = out.copy()
+character = out[:-1].copy()
 for item in sorted(faces,key=lambda f:f[0]):
     _,ps,tex,uv,shade = item
     p0,p1,_,p3=map(project,ps)
