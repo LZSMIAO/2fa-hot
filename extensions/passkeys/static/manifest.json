@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "2fa.hot Passkeys",
+  "version": "0.1.0",
+  "description": "在本机加密保存通行密钥，在网站上创建和登录，并通过加密备份迁移。",
+  "minimum_chrome_version": "120",
+  "permissions": ["storage", "alarms", "webNavigation"],
+  "background": { "service_worker": "background.js" },
+  "action": { "default_title": "管理通行密钥" },
+  "options_page": "ui.html",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; connect-src 'none'"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*/*", "http://localhost/*"],
+      "js": ["content.js"],
+      "run_at": "document_start",
+      "all_frames": false
+    },
+    {
+      "matches": ["https://*/*", "http://localhost/*"],
+      "js": ["page.js"],
+      "run_at": "document_start",
+      "all_frames": false,
+      "world": "MAIN"
+    }
+  ]
+}

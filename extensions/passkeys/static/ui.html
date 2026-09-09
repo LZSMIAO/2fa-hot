@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>通行密钥 · 2fa.hot</title>
+    <link rel="stylesheet" href="ui.css" />
+    <script src="ui.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <a href="ui.html" class="brand">2fa<span>.hot</span></a
+        ><span class="badge">PASSKEYS</span>
+      </header>
+      <section class="intro">
+        <h1 id="title">你的通行密钥</h1>
+        <p id="subtitle">在网站上创建，在这里管理。密钥加密保存在当前浏览器扩展中。</p>
+      </section>
+      <div id="request-info" class="request-info" hidden>
+        <span>请求来源</span><strong id="origin"></strong>
+        <p id="request-account"></p>
+      </div>
+      <p id="error" class="message error" role="alert" hidden></p>
+      <p id="notice" class="message notice" role="status" hidden></p>
+      <section id="gate" class="panel">
+        <h2 id="gate-title">解锁密钥库</h2>
+        <form id="unlock-form">
+          <label
+            >主口令<input
+              id="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              maxlength="1024"
+              autofocus
+          /></label>
+          <label id="confirmation-field" hidden
+            >再次输入主口令<input
+              id="confirmation"
+              type="password"
+              autocomplete="new-password"
+              maxlength="1024"
+          /></label>
+          <p id="setup-hint" class="hint" hidden>
+            至少 12 个字符。主口令不会上传；遗忘后无法找回，请妥善保存。
+          </p>
+          <button id="unlock" type="submit" class="primary">解锁</button>
+        </form>
+      </section>
+      <section id="approval" class="panel" hidden>
+        <h2 id="approval-title">选择登录账号</h2>
+        <form id="approve-form">
+          <div id="choices"></div>
+          <p class="hint">确认后，扩展仅向上方网站返回注册或登录结果。</p>
+          <button id="approve" class="primary" type="submit">确认登录</button>
+        </form>
+      </section>
+      <div id="request-actions" class="request-actions" hidden>
+        <button id="fallback" class="secondary">使用系统或其他验证器</button
+        ><button id="deny" class="text-button">取消</button>
+      </div>
+      <section id="manager" hidden>
+        <div class="toolbar">
+          <label class="search"
+            ><span class="sr-only">搜索网站或账号</span
+            ><input id="search" type="search" placeholder="搜索网站或账号" /></label
+          ><button id="lock" class="secondary">锁定</button>
+        </div>
+        <div class="list-heading">
+          <label class="check"><input id="select-all" type="checkbox" />选择当前列表</label
+          ><span id="count"></span>
+        </div>
+        <div id="records"></div>
+        <div id="empty" class="empty" hidden>
+          <h2>从网站添加第一把通行密钥</h2>
+          <p>打开目标网站的账号安全设置，点击“创建通行密钥”，然后在扩展窗口中确认保存。</p>
+          <p>已有通行密钥？展开下方“导入”，选择兼容的导出文件。</p>
+        </div>
+        <div class="selection-bar">
+          <span id="selected-count">已选 0 条</span
+          ><button id="remove" class="text-button danger">删除所选</button>
+        </div>
+        <details id="export-section" class="panel">
+          <summary>导出与迁移</summary>
+          <form id="export-form">
+            <p class="hint">先在列表中选择账号。迁移后到目标网站确认能登录，再删除旧副本。</p>
+            <label
+              >导出格式<select id="export-format">
+                <option value="encrypted">加密备份 · 转移到另一台设备</option>
+                <option value="bitwarden">Bitwarden JSON · 格式兼容导出</option>
+              </select></label
+            >
+            <div id="export-encrypted">
+              <label
+                >备份口令<input
+                  id="export-password"
+                  type="password"
+                  minlength="12"
+                  maxlength="1024"
+                  autocomplete="new-password" /></label
+              ><label
+                >再次输入备份口令<input
+                  id="export-confirmation"
+                  type="password"
+                  maxlength="1024"
+                  autocomplete="new-password"
+              /></label>
+              <p class="hint">备份口令可以与主口令不同。接收设备安装扩展后，用此口令导入。</p>
+            </div>
+            <label id="export-plaintext" class="check warning" hidden
+              ><input id="confirm-plaintext" type="checkbox" />我知道此 JSON
+              包含未加密的私钥，仅用于迁入支持此格式的管理器。完成后删除文件。</label
+            >
+            <p id="format-note" class="hint" hidden>
+              格式按 Bitwarden
+              的通行密钥字段适配。目标客户端的导入能力需验证；此文件不是系统凭据交换。
+            </p>
+            <button class="primary" type="submit">导出所选</button>
+          </form>
+        </details>
+        <details id="import-section" class="panel">
+          <summary>导入已有通行密钥</summary>
+          <form id="import-form">
+            <p class="hint">
+              支持本站加密备份和 Bitwarden 未加密 JSON。仅导入 ES256 / P-256
+              通行密钥，密码和验证码密钥不会导入。
+            </p>
+            <label
+              >选择文件<input
+                id="import-file"
+                type="file"
+                accept=".json,.2fapasskeys,application/json"
+                required
+            /></label>
+            <label
+              >备份口令（加密备份需要）<input
+                id="import-password"
+                type="password"
+                autocomplete="off"
+                maxlength="1024"
+            /></label>
+            <button class="secondary" type="submit">检查并预览</button>
+          </form>
+          <div id="import-preview" hidden>
+            <p id="import-summary"></p>
+            <ul id="import-list"></ul>
+            <button id="import-confirm" class="primary">确认合并</button>
+          </div>
+        </details>
+        <details class="panel">
+          <summary>密钥库设置</summary>
+          <form id="change-password-form">
+            <label
+              >新主口令<input
+                id="next-password"
+                type="password"
+                minlength="12"
+                maxlength="1024"
+                autocomplete="new-password"
+                required /></label
+            ><label
+              >再次输入新主口令<input
+                id="next-confirmation"
+                type="password"
+                maxlength="1024"
+                autocomplete="new-password"
+                required /></label
+            ><button class="secondary" type="submit">修改主口令</button>
+          </form>
+          <label class="check pause"
+            ><input id="paused" type="checkbox" />暂停扩展处理通行密钥请求</label
+          >
+          <p class="hint">暂停后由系统或其他密码管理器处理。已有密钥保留。</p>
+        </details>
+      </section>
+      <details class="help">
+        <summary>如何添加、迁入和迁出？</summary>
+        <p>
+          <strong>新建：</strong
+          >在目标网站的安全设置中创建，由扩展生成私钥并保存；网站保存公钥。不能在这里随意填写网站名称就创建有效的登录凭据。
+        </p>
+        <p>
+          <strong>迁入：</strong
+          >在原管理器导出，再选择文件导入。若原管理器不允许导出，请回到目标网站添加一把新的通行密钥。登录时出现的跨设备二维码通常用于验证，不是私钥导出。
+        </p>
+        <p>
+          <strong>迁出：</strong
+          >同一扩展之间使用加密备份；其他管理器需要支持对应格式。硬件内不可导出的私钥无法读取。删除这里的副本不会撤销网站上的凭据。
+        </p>
+        <p>
+          <strong>保存位置：</strong
+          >当前浏览器配置文件内，没有本站云同步。卸载扩展或清除扩展数据会删除本地密钥，请先导出备份。
+        </p>
+      </details>
+      <footer>本地加密 · 关闭窗口后自动锁定 · 开发预览版</footer>
+    </main>
+    <dialog id="delete-dialog">
+      <h2>删除所选通行密钥？</h2>
+      <p>删除后无法恢复。请先确认另一份凭据能登录对应网站。</p>
+      <div class="dialog-actions">
+        <button id="delete-cancel" class="secondary">取消</button
+        ><button id="delete-confirm" class="danger-button">确认删除</button>
+      </div>
+    </dialog>
+  </body>
+</html>

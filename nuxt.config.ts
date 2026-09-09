@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     },
     vueI18n: './i18n.config.ts'
   },
-  css: ['~/assets/css/main.css', '~/assets/css/ore.css'],
+  css: ['~/assets/css/app.css'],
   devtools: { enabled: false },
   experimental: { viewTransition: true },
   nitro: {

@@ -138,7 +138,7 @@ function positionCursor() {
   }
 }
 function start() {
-  window.dispatchEvent(new CustomEvent('2fa-ui-sound', { detail: 'experience' }))
+  window.dispatchEvent(new CustomEvent('2fa-ui-sound', { detail: 'demo' }))
   clearTimeout(clickTimer)
   clicking.value = false
   started.value = true
@@ -323,17 +323,19 @@ onBeforeUnmount(() => {
             @click="start"
           />
         </div>
-        <UButton v-if="finished" variant="outline" color="neutral" @click="emit('switchMode')">{{
-          tx('批量取码演示')
-        }}</UButton>
-        <UButton
-          v-if="activeStep < 3"
-          class="primary-button tutorial-next"
-          @click="chooseStep(activeStep + 1)"
-          >{{ tx('下一步') }}</UButton
-        ><UButton v-else-if="finished" class="primary-button" @click="emit('close')">{{
-          tx('我会用了')
-        }}</UButton>
+        <div class="tutorial-actions">
+          <UButton v-if="finished" variant="outline" color="neutral" @click="emit('switchMode')">{{
+            tx('批量取码演示')
+          }}</UButton>
+          <UButton
+            v-if="activeStep < 3"
+            class="primary-button tutorial-next"
+            @click="chooseStep(activeStep + 1)"
+            >{{ tx('下一步') }}</UButton
+          ><UButton v-else-if="finished" class="primary-button" @click="emit('close')">{{
+            tx('我会用了')
+          }}</UButton>
+        </div>
       </div>
     </template>
   </aside>
@@ -545,6 +547,15 @@ onBeforeUnmount(() => {
 }
 .tutorial-controls > div {
   display: flex;
+}
+.tutorial-controls > .tutorial-actions {
+  margin-inline-start: auto;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+.tutorial-actions > :deep(button) {
+  min-height: 3rem;
+  padding-block: 0.5rem;
 }
 .tutorial-footnote {
   font-size: var(--text-caption);

@@ -3,13 +3,54 @@ const { tx } = useMessages()
 const enabled = shallowRef(false)
 const ready = shallowRef(false)
 const player = useTemplateRef<HTMLAudioElement>('player')
+const selection = useTemplateRef<HTMLAudioElement>('selection')
+const parameters = useTemplateRef<HTMLAudioElement>('parameters')
+const character = useTemplateRef<HTMLAudioElement>('character')
+const expand = useTemplateRef<HTMLAudioElement>('expand')
+const demo = useTemplateRef<HTMLAudioElement>('demo')
 const toast = useTemplateRef<HTMLAudioElement>('toast')
 const experience = useTemplateRef<HTMLAudioElement>('experience')
 const preferenceKey = '2fa-hot:button-sound'
-type Sound = 'click' | 'experience' | 'toast'
+type SoundSample =
+  'click' | 'select' | 'parameters' | 'character' | 'expand' | 'demo' | 'experience' | 'toast'
+type Sound =
+  | 'click'
+  | 'select'
+  | 'parameters'
+  | 'character'
+  | 'expand'
+  | 'demo'
+  | 'success'
+  | 'stone-on'
+  | 'stone-off'
+  | 'experience'
+  | 'toast'
+const samples: Record<SoundSample, string> = {
+  click: '/audio/minecraft-click.ogg',
+  select: '/audio/minecraft-select.ogg',
+  parameters: '/audio/minecraft-parameters.ogg',
+  character: '/audio/minecraft-character.ogg',
+  expand: '/audio/minecraft-expand.ogg',
+  demo: '/audio/minecraft-demo.ogg',
+  experience: '/audio/minecraft-experience.ogg',
+  toast: '/audio/minecraft-toast.ogg'
+}
+const profiles: Record<Sound, { sample: SoundSample; rate: number; gain: number }> = {
+  click: { sample: 'click', rate: 1, gain: 1 },
+  select: { sample: 'select', rate: 1, gain: 0.7 },
+  parameters: { sample: 'parameters', rate: 1, gain: 0.9 },
+  character: { sample: 'character', rate: 1, gain: 0.65 },
+  expand: { sample: 'expand', rate: 1, gain: 0.65 },
+  demo: { sample: 'demo', rate: 1, gain: 0.5 },
+  success: { sample: 'experience', rate: 1, gain: 0.25 },
+  'stone-on': { sample: 'click', rate: 0.6, gain: 0.9 },
+  'stone-off': { sample: 'click', rate: 0.5, gain: 0.85 },
+  experience: { sample: 'experience', rate: 1, gain: 1 },
+  toast: { sample: 'toast', rate: 1, gain: 0.75 / 0.35 }
+}
 let context: AudioContext | undefined
 let gain: GainNode | undefined
-const buffers = new Map<Sound, AudioBuffer>()
+const buffers = new Map<SoundSample, AudioBuffer>()
 const voices = new Set<AudioBufferSourceNode>()
 const loading = new AbortController()
 let prepared = false
@@ -24,15 +65,15 @@ function prepare() {
     gain.gain.value = 0.35
     gain.connect(context.destination)
     const audioContext = context
-    for (const kind of ['click', 'experience', 'toast'] as const) {
-      void fetch(`/audio/minecraft-${kind}.ogg`, { signal: loading.signal })
+    for (const [sample, source] of Object.entries(samples) as [SoundSample, string][]) {
+      void fetch(source, { signal: loading.signal })
         .then((response) => {
           if (!response.ok) throw new Error('Audio unavailable')
           return response.arrayBuffer()
         })
         .then((data) => audioContext.decodeAudioData(data))
         .then((buffer) => {
-          if (!disposed) buffers.set(kind, buffer)
+          if (!disposed) buffers.set(sample, buffer)
         })
         .catch(() => {
           /* The preloaded audio element remains the fallback. */
@@ -54,13 +95,19 @@ function stop() {
   }
   voices.clear()
   player.value?.pause()
+  selection.value?.pause()
+  parameters.value?.pause()
+  character.value?.pause()
+  expand.value?.pause()
+  demo.value?.pause()
   experience.value?.pause()
   toast.value?.pause()
 }
 function play(kind: Sound = 'click') {
   if (!enabled.value || disposed) return
   unlock()
-  const buffer = buffers.get(kind)
+  const profile = profiles[kind]
+  const buffer = buffers.get(profile.sample)
   if (context && gain && buffer && context.state !== 'closed') {
     // A fresh source avoids media-element seek latency and supports rapid taps.
     if (voices.size >= 4) {
@@ -70,8 +117,9 @@ function play(kind: Sound = 'click') {
     }
     const voice = context.createBufferSource()
     voice.buffer = buffer
+    voice.playbackRate.value = profile.rate
     const voiceGain = context.createGain()
-    voiceGain.gain.value = kind === 'toast' ? 0.75 / 0.35 : 1
+    voiceGain.gain.value = profile.gain
     voice.connect(voiceGain)
     voiceGain.connect(gain)
     voice.onended = () => {
@@ -83,44 +131,76 @@ function play(kind: Sound = 'click') {
     voice.start()
     return
   }
-  const fallback =
-    kind === 'toast' ? toast.value : kind === 'experience' ? experience.value : player.value
+  const fallback = {
+    click: player.value,
+    select: selection.value,
+    parameters: parameters.value,
+    character: character.value,
+    expand: expand.value,
+    demo: demo.value,
+    experience: experience.value,
+    toast: toast.value
+  }[profile.sample]
   if (fallback) {
     fallback.currentTime = 0
+    fallback.playbackRate = profile.rate
+    fallback.preservesPitch = false
+    fallback.volume = Math.min(1, 0.35 * profile.gain)
     void fallback.play().catch(() => {})
   }
 }
+function isSound(value: unknown): value is Sound {
+  return typeof value === 'string' && Object.hasOwn(profiles, value)
+}
 function scriptedSound(event: Event) {
   const kind = (event as CustomEvent).detail
-  play(kind === 'toast' || kind === 'experience' ? kind : 'click')
+  play(isSound(kind) ? kind : 'click')
 }
 function toggle() {
-  enabled.value = !enabled.value
+  const next = !enabled.value
+  if (next) {
+    enabled.value = true
+    prepare()
+    play('stone-on')
+  } else {
+    play('stone-off')
+    enabled.value = false
+  }
   try {
-    localStorage.setItem(preferenceKey, enabled.value ? 'on' : 'off')
+    localStorage.setItem(preferenceKey, next ? 'on' : 'off')
   } catch {
     /* In-memory preference still works. */
   }
-  if (enabled.value) {
-    prepare()
-    play()
-  } else stop()
 }
 function controlFor(target: EventTarget | null) {
   if (!(target instanceof Element)) return null
   const control = target.closest(
-    'button, a[href], [role="button"], [role="tab"], [role="menuitem"], [role="menuitemcheckbox"]'
+    'button, a[href], input[type="checkbox"], [role="button"], [role="checkbox"], [role="tab"], [role="menuitem"], [role="menuitemcheckbox"]'
   )
   return control &&
-    !control.closest('[data-sound-toggle], [data-sound-custom], [disabled], [aria-disabled="true"]')
+    !control.closest(
+      '.selection-sound-item, [data-sound-toggle], [data-sound-custom], [disabled], [aria-disabled="true"]'
+    )
     ? control
     : null
 }
 let touch: { id: number; x: number; y: number; control: Element; moved: boolean } | undefined
 let lastPointer: { control: Element; at: number } | undefined
+let lastKeyboard: { control: Element; at: number } | undefined
 function pointerSound(control: Element) {
-  play()
+  play(controlSound(control))
   lastPointer = { control, at: performance.now() }
+}
+function controlSound(control: Element): Sound {
+  if (control.matches('input[type="checkbox"], [role="checkbox"], [role="menuitemcheckbox"]'))
+    return 'select'
+  if (control.matches('[role="switch"], [aria-pressed]')) {
+    const active =
+      control.getAttribute('aria-checked') === 'true' ||
+      control.getAttribute('aria-pressed') === 'true'
+    return active ? 'stone-off' : 'stone-on'
+  }
+  return 'click'
 }
 function handlePointerDown(event: PointerEvent) {
   if (!event.isTrusted || event.button !== 0 || !event.isPrimary) return
@@ -152,6 +232,14 @@ function handleClick(event: MouseEvent) {
   const control = controlFor(event.target)
   if (!control) return
   if (
+    event.detail === 0 &&
+    lastKeyboard?.control === control &&
+    performance.now() - lastKeyboard.at < 1000
+  ) {
+    lastKeyboard = undefined
+    return
+  }
+  if (
     event.detail > 0 &&
     lastPointer?.control === control &&
     performance.now() - lastPointer.at < 1000
@@ -159,10 +247,22 @@ function handleClick(event: MouseEvent) {
     lastPointer = undefined
     return
   }
-  play()
+  play(controlSound(control))
 }
 function handleKey(event: KeyboardEvent) {
-  if (event.isTrusted) unlock()
+  if (!event.isTrusted) return
+  unlock()
+  if (
+    !enabled.value ||
+    event.repeat ||
+    event.isComposing ||
+    (event.key !== 'Enter' && event.key !== ' ')
+  )
+    return
+  const control = controlFor(event.target)
+  if (!control || (event.key === ' ' && control.matches('a[href]'))) return
+  play(controlSound(control))
+  lastKeyboard = { control, at: performance.now() }
 }
 function syncPreference(event: StorageEvent) {
   if (event.key !== preferenceKey && event.key !== null) return
@@ -177,9 +277,6 @@ onMounted(() => {
     enabled.value = false
   }
   ready.value = true
-  if (player.value) player.value.volume = 0.35
-  if (experience.value) experience.value.volume = 0.35
-  if (toast.value) toast.value.volume = 0.75
   prepare()
   document.addEventListener('pointerdown', handlePointerDown, { capture: true, passive: true })
   document.addEventListener('pointermove', handlePointerMove, { capture: true, passive: true })
@@ -227,6 +324,36 @@ onBeforeUnmount(() => {
   <audio
     ref="experience"
     src="/audio/minecraft-experience.ogg"
+    :preload="ready && enabled ? 'auto' : 'none'"
+    aria-hidden="true"
+  />
+  <audio
+    ref="selection"
+    src="/audio/minecraft-select.ogg"
+    :preload="ready && enabled ? 'auto' : 'none'"
+    aria-hidden="true"
+  />
+  <audio
+    ref="parameters"
+    src="/audio/minecraft-parameters.ogg"
+    :preload="ready && enabled ? 'auto' : 'none'"
+    aria-hidden="true"
+  />
+  <audio
+    ref="character"
+    src="/audio/minecraft-character.ogg"
+    :preload="ready && enabled ? 'auto' : 'none'"
+    aria-hidden="true"
+  />
+  <audio
+    ref="expand"
+    src="/audio/minecraft-expand.ogg"
+    :preload="ready && enabled ? 'auto' : 'none'"
+    aria-hidden="true"
+  />
+  <audio
+    ref="demo"
+    src="/audio/minecraft-demo.ogg"
     :preload="ready && enabled ? 'auto' : 'none'"
     aria-hidden="true"
   />

@@ -26,27 +26,30 @@ const headerTheme = {
 const compact = computed(
   () => isPrivatePage(route.path) && unlocalizedPath(route.path) !== '/history'
 )
+type ThemePreference = 'light' | 'dark' | 'system'
+function selectTheme(preference: ThemePreference) {
+  if (colorMode.preference === preference) return
+  colorMode.preference = preference
+  window.dispatchEvent(new CustomEvent('2fa-ui-sound', { detail: 'select' }))
+}
 const themes = computed(() => [
   {
     label: tx('浅色'),
     icon: 'i-lucide-sun',
-    onSelect: () => {
-      colorMode.preference = 'light'
-    }
+    class: 'selection-sound-item',
+    onSelect: () => selectTheme('light')
   },
   {
     label: tx('深色'),
     icon: 'i-lucide-moon',
-    onSelect: () => {
-      colorMode.preference = 'dark'
-    }
+    class: 'selection-sound-item',
+    onSelect: () => selectTheme('dark')
   },
   {
     label: tx('跟随系统'),
     icon: 'i-lucide-monitor',
-    onSelect: () => {
-      colorMode.preference = 'system'
-    }
+    class: 'selection-sound-item',
+    onSelect: () => selectTheme('system')
   }
 ])
 const menu = computed(() => [

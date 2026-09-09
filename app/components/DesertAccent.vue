@@ -13,6 +13,11 @@ function greet() {
   month.value = new Date().getMonth() + 1
   active.value = true
 }
+function hoverGreet() {
+  if (active.value || !matchMedia('(hover: hover) and (pointer: fine)').matches) return
+  greet()
+  window.dispatchEvent(new CustomEvent('2fa-ui-sound', { detail: 'character' }))
+}
 </script>
 <template>
   <div class="desert-accent">
@@ -26,7 +31,12 @@ function greet() {
       @click="greet"
       @keydown.esc="active = false"
     >
-      <span class="desert-art" @pointerover="greet" @pointerleave="active = false" v-html="scene" />
+      <span
+        class="desert-art"
+        @pointerover="hoverGreet"
+        @pointerleave="active = false"
+        v-html="scene"
+      />
       <span v-if="active" class="desert-tip" role="status">{{ tx(line) }}</span>
     </button>
   </div>

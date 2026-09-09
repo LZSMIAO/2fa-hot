@@ -68,6 +68,7 @@
 }
 html {
   overflow-x: clip;
+  scrollbar-gutter: stable;
   touch-action: manipulation;
 }
 body {
@@ -81,6 +82,12 @@ body {
   line-height: 1.6;
   font-kerning: normal;
   -webkit-font-smoothing: antialiased;
+}
+@supports (scrollbar-gutter: stable) {
+  body {
+    /* The stable root gutter already reserves this space when a modal locks scrolling. */
+    padding-right: 0 !important;
+  }
 }
 button,
 a,
@@ -551,8 +558,15 @@ code {
   text-align: start;
   line-height: 1.25;
 }
-.clear-input {
-  font-size: var(--text-caption);
+html.light .workspace .parameter-sun,
+html.light .workspace .parameter-moon {
+  background-color: transparent;
+  background-image: url('/textures/sun-light.png');
+  background-blend-mode: normal;
+  mask-image: none;
+}
+html.light .workspace .parameter-moon {
+  background-image: url('/textures/moon_phases-light.png');
 }
 .text-action {
   display: inline-flex;
@@ -698,7 +712,24 @@ code {
 }
 .result-copy kbd {
   position: absolute;
-  inset-inline-end: 0.875rem;
+  inset-inline-end: 0.75rem;
+  top: 50%;
+  display: inline-flex;
+  width: 1.375rem;
+  min-width: 1.375rem;
+  height: 1.375rem;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  border: 1px solid color-mix(in srgb, currentColor 45%, transparent);
+  border-radius: 0;
+  background: rgb(0 0 0 / 12%);
+  box-shadow: none;
+  color: currentColor;
+  font-size: 0.75rem;
+  line-height: 1;
+  opacity: 0.82;
 }
 .copy-icon {
   position: relative;
@@ -1329,9 +1360,4 @@ code {
   .guide-mode .advanced {
     display: none;
   }
-}
-
-/* Reserve the scrollbar track before results expand to prevent horizontal shifts. */
-html {
-  scrollbar-gutter: stable;
 }

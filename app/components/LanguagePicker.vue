@@ -47,9 +47,15 @@ const changing = shallowRef(false)
 const hovered = shallowRef(false)
 const issue = shallowRef('')
 async function change(next: SupportedLocale) {
-  if (!supportedLocales.some((item) => item.code === next) || changing.value) return
+  if (
+    next === locale.value ||
+    !supportedLocales.some((item) => item.code === next) ||
+    changing.value
+  )
+    return
   changing.value = true
   issue.value = ''
+  window.dispatchEvent(new CustomEvent('2fa-ui-sound', { detail: 'select' }))
   try {
     const available = pageLocales(route.path)
     if (available.length && !available.includes(next)) {

@@ -12,6 +12,64 @@ The audio is an unmodified Minecraft asset from Mojang/Microsoft. It is not orig
 
 The interface defaults to muted (an explicit enabled preference is retained), stores only the on/off preference locally, and preloads and decodes the same-origin sounds when enabled. Playback uses a short-lived Web Audio source per interaction, with preloaded audio elements as a fallback. Pointer input and keyboard activation are deduplicated; touch scrolling does not trigger a click sound. No third-party audio requests are made at runtime.
 
+## Selection feedback
+
+- Local file: `public/audio/minecraft-select.ogg`
+- Original asset: `minecraft/sounds/note/hat.ogg`
+- Sound event: `block.note_block.hat`
+- Official asset index: [26.2](https://piston-meta.mojang.com/v1/packages/e6ac246e2a151ff254110f4ddb1a944ed184d140/32.json)
+- Official download: [Mojang resource CDN](https://resources.download.minecraft.net/db/db3b85662c0000733a04d5087d7d835771a70cc5)
+- SHA-1: `db3b85662c0000733a04d5087d7d835771a70cc5` (verified after download)
+- Size: 4531 bytes
+
+The unmodified note-block hi-hat plays when a dropdown value or header language/theme preference actually changes, or a selection checkbox is toggled. Opening a menu keeps the ordinary click sound, and choosing the current value stays silent.
+
+## Verification parameters toggle
+
+- Local file: `public/audio/minecraft-parameters.ogg`
+- Original asset: `minecraft/sounds/item/spyglass/stop.ogg`
+- Official download: [Mojang resource CDN](https://resources.download.minecraft.net/e6/e6ee4114f1db6bba8ae04d24fe8313b5a8095bcf)
+- SHA-1: `e6ee4114f1db6bba8ae04d24fe8313b5a8095bcf` (verified after download)
+- Size: 6015 bytes
+
+The unmodified spyglass stop sound plays when the sun/moon control opens or closes the verification parameters.
+
+## Expanded code view
+
+- Local file: `public/audio/minecraft-expand.ogg`
+- Original asset: `minecraft/sounds/item/spyglass/use.ogg`
+- Official download: [Mojang resource CDN](https://resources.download.minecraft.net/43/433026dc9ff0946ef52622316550aef5fcf9fb46)
+- SHA-1: `433026dc9ff0946ef52622316550aef5fcf9fb46` (verified after download)
+- Size: 8669 bytes
+
+The unmodified spyglass-use sound plays when opening the expanded code view. Returning to the full tool uses the corresponding spyglass-stop sound.
+
+## Demo start
+
+- Local file: `public/audio/minecraft-demo.ogg`
+- Original asset: `minecraft/sounds/ui/loom/take_result.ogg`
+- Sound event: `ui.loom.take_result`
+- Official download: [Mojang resource CDN](https://resources.download.minecraft.net/2f/2f19ae244c92e4ed7fa8c205c0341f1f3a4cc67e)
+- SHA-1: `2f19ae244c92e4ed7fa8c205c0341f1f3a4cc67e` (verified after download)
+- Size: 10029 bytes
+
+The unmodified loom result sound plays when a single or batch demonstration starts.
+
+## Character hover
+
+- Local file: `public/audio/minecraft-character.ogg`
+- Original asset: `minecraft/sounds/note/bell.ogg`
+- Sound event: `block.note_block.bell`
+- Official download: [Mojang resource CDN](https://resources.download.minecraft.net/a1/a1e833dec61595dc79d0c672fcd7838579ca4b14)
+- SHA-1: `a1e833dec61595dc79d0c672fcd7838579ca4b14` (verified after download)
+- Size: 6087 bytes
+
+The unmodified note-block bell plays once when a fine pointer enters the interactive desert character. Moving between parts of the character does not retrigger it, and touch input does not play a hover sound.
+
+## Successful code generation
+
+The short experience-pickup sound documented below plays at reduced volume when a valid configuration first produces a code. It does not repeat when the same configuration rotates to its next code.
+
 ## Tip entrance
 
 - Local file: `public/audio/minecraft-toast.ogg`

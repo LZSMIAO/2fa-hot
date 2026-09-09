@@ -4,6 +4,10 @@ const content = {
     back: '返回取碼',
     sections: [
       [
+        '為什麼需要 Lite？',
+        'Lite 為只需快速取得 TOTP 驗證碼的情況而設：頁面更小、載入更快、依賴更少，在慢速網路、舊裝置或完整版本無法正常載入時仍可使用。它保留瀏覽器內計算、多密鑰識別和快捷取碼；QR 匯入、本機紀錄等完整功能則由完整版本提供。'
+      ],
+      [
         '如何取碼',
         '貼上已有的 Base32 密鑰或 otpauth://totp/ 設定連結，驗證碼會自動顯示。點「複製驗證碼」後，填入需要驗證的網站。倒計時結束時會自動更新。'
       ],
@@ -38,6 +42,10 @@ const content = {
     back: '返回取码',
     sections: [
       [
+        '为什么需要 Lite？',
+        'Lite 为只需快速获取 TOTP 验证码的场景准备：页面更小、加载更快、依赖更少，在慢速网络、旧设备或完整版本无法正常加载时仍可使用。它保留浏览器内计算、多密钥识别和快捷取码；二维码导入、本机记录等完整功能则由完整版本提供。'
+      ],
+      [
         '如何取码',
         '粘贴已有的 Base32 密钥或 otpauth://totp/ 配置链接，验证码会自动显示。点“复制验证码”后，填入需要验证的网站。倒计时结束时会自动更新。'
       ],
@@ -71,6 +79,10 @@ const content = {
     title: 'Lite guide',
     back: 'Back to codes',
     sections: [
+      [
+        'Why Lite?',
+        'Lite is for situations where you only need a TOTP code quickly. Its smaller page and fewer dependencies load faster on slow networks and older devices, and can remain usable when the full version cannot load properly. It keeps in-browser calculation, multiple-secret detection and quick code links; QR import, saved history and other features remain in the full version.'
+      ],
       [
         'Get a code',
         'Paste an existing Base32 secret or otpauth://totp/ configuration link. Your code appears automatically. Copy it into the service requesting verification. The code refreshes when the countdown ends.'

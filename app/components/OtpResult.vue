@@ -12,7 +12,7 @@ useHead({
     }
   ]
 })
-import { toAccessPath, DEMO_SECRET, type OtpConfig } from '~/utils/otp'
+import { toAccessPath, type OtpConfig } from '~/utils/otp'
 const props = defineProps<{
   config: OtpConfig | null
   error?: string
@@ -48,6 +48,29 @@ const copyConfirmed = computed(
   () => copied.value || (props.guideStep !== undefined && props.guideStep >= 3)
 )
 watch(code, (value) => emit('code', value), { immediate: true })
+const successKey = computed(() =>
+  props.config &&
+  code.value &&
+  !props.error &&
+  !calculationError.value &&
+  props.guideStep === undefined
+    ? JSON.stringify(props.config)
+    : ''
+)
+let soundedSuccess = ''
+watch(
+  successKey,
+  (key) => {
+    if (!key) {
+      soundedSuccess = ''
+      return
+    }
+    if (key === soundedSuccess) return
+    soundedSuccess = key
+    window.dispatchEvent(new CustomEvent('2fa-ui-sound', { detail: 'success' }))
+  },
+  { flush: 'post' }
+)
 const shortcutHint = shallowRef(false)
 const desktopShortcut = shallowRef(false)
 let shortcutMedia: MediaQueryList | undefined
@@ -166,6 +189,7 @@ function handleCopyShortcut(event: KeyboardEvent) {
   )
     return
   event.preventDefault()
+  window.dispatchEvent(new CustomEvent('2fa-ui-sound', { detail: 'click' }))
   void copyCurrent()
 }
 onMounted(() => window.addEventListener('keydown', handleCopyShortcut))
@@ -179,6 +203,9 @@ function prepareSizeChange() {
 }
 async function expand() {
   if (!props.config || props.guideStep !== undefined) return
+  window.dispatchEvent(
+    new CustomEvent('2fa-ui-sound', { detail: props.standalone ? 'parameters' : 'expand' })
+  )
   if (props.standalone) {
     vault.pending.value = { ...props.config }
     await navigateTo(localePath('/'))
@@ -192,12 +219,12 @@ async function expand() {
   <div class="result-head">
     <span>{{ tx(standalone ? '当前有效验证码' : '当前验证码') }}</span>
     <div class="result-head-actions">
-      <span v-if="config?.secret === DEMO_SECRET" class="result-status">{{ tx('示例') }}</span>
       <UButton
         color="neutral"
         variant="ghost"
         :icon="standalone ? 'i-lucide-minimize-2' : 'i-lucide-maximize-2'"
         class="expand-button"
+        data-sound-custom
         :aria-label="tx(standalone ? '缩小验证码' : '放大验证码')"
         :title="tx(standalone ? '返回工具首页' : '放大到独立取码页')"
         :disabled="
@@ -263,8 +290,7 @@ async function expand() {
         ><UIcon
           :key="copyConfirmed ? 'copied' : 'copy'"
           :name="copyConfirmed ? 'i-lucide-check' : 'i-lucide-copy'" /></Transition></span
-    >{{ tx(copyConfirmed ? '已复制' : '复制验证码')
-    }}<UKbd value="↵" class="ml-auto opacity-70 bg-white/10 text-white ring-0"
+    >{{ tx(copyConfirmed ? '已复制' : '复制验证码') }}<UKbd value="↵" class="copy-shortcut-key"
   /></UButton>
   <ActionHint
     :open="shortcutHint && !!code && guideStep === undefined"

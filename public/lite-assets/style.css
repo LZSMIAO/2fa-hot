@@ -349,9 +349,11 @@ select.language-select {
   vertical-align: middle;
 }
 .actions button {
-  width: 144px;
-  height: 44px;
-  padding: 8px;
+  width: 112px;
+  height: 36px;
+  min-height: 36px;
+  padding: 5px 8px;
+  font-size: 14px;
 }
 .panel .privacy {
   margin: 16px -24px -24px;
@@ -360,9 +362,6 @@ select.language-select {
   background: #f3f4ef;
 }
 @media (max-width: 420px) {
-  .actions button {
-    width: calc(50% - 8px);
-  }
   .panel .privacy {
     margin: 16px -16px -16px;
     padding: 16px;
@@ -450,4 +449,30 @@ textarea {
   -webkit-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+/* Remove the inline textarea baseline gap and extend only the divider. */
+textarea {
+  display: block;
+}
+.result {
+  position: relative;
+  border-top: 0;
+}
+.result:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -24px;
+  right: -24px;
+  border-top: 1px solid #c4cbbc;
+}
+.code-only .result:before {
+  display: none;
+}
+@media (max-width: 420px) {
+  .result:before {
+    left: -16px;
+    right: -16px;
+  }
 }

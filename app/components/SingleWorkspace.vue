@@ -59,6 +59,10 @@ const vault = useVault()
 const displayRaw = computed(() =>
   guiding.value ? (props.guideStep! >= 2 ? DEMO_SECRET : '') : raw.value
 )
+function toggleAdvanced() {
+  advanced.value = !advanced.value
+  window.dispatchEvent(new CustomEvent('2fa-ui-sound', { detail: 'parameters' }))
+}
 function updateRaw(value: string) {
   if (guiding.value) return
   if (isMigrationUri(value)) {
@@ -171,6 +175,10 @@ function clear() {
   revealed.value = true
   advanced.value = true
   field.value?.inputRef?.focus()
+}
+function clearWithSound() {
+  window.dispatchEvent(new CustomEvent('2fa-ui-sound', { detail: 'parameters' }))
+  clear()
 }
 async function paste() {
   const revision = ++pasteRevision
@@ -293,13 +301,6 @@ onBeforeUnmount(() => {
     <section class="input-panel" aria-labelledby="secret-heading">
       <div class="section-heading">
         <h2 id="secret-heading">{{ tx('密钥') }}</h2>
-        <button
-          class="text-action clear-input"
-          :disabled="guiding || (!raw && !pendingPaste)"
-          @click="clear"
-        >
-          {{ tx('清空') }}
-        </button>
       </div>
       <label class="sr-only" for="secret">{{ tx('2FA 密钥') }}</label>
       <UInput
@@ -320,23 +321,38 @@ onBeforeUnmount(() => {
         :aria-invalid="!guiding && !!issue"
         :aria-describedby="!guiding && issue ? 'secret-help secret-error' : 'secret-help'"
         :ui="{
-          base: 'font-mono text-base h-13 pr-12 ring-[var(--control-line)] focus-visible:ring-primary'
+          base: 'font-mono text-base h-13 pr-24 ring-[var(--control-line)] focus-visible:ring-primary'
         }"
         @paste="handlePaste"
         @compositionstart="composing = true"
         @compositionend="finishComposition"
         @blur="recognizeMixedInput"
       >
-        <template #trailing
-          ><UButton
-            color="neutral"
-            variant="ghost"
-            size="sm"
-            class="icon-button"
-            :icon="revealed ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-            :aria-label="tx(revealed ? '隐藏密钥' : '显示密钥')"
-            @click="revealed = !revealed"
-        /></template>
+        <template #trailing>
+          <div class="secret-actions">
+            <UButton
+              color="neutral"
+              variant="ghost"
+              size="sm"
+              icon="i-lucide-eraser"
+              class="secret-action"
+              :aria-label="tx('清空')"
+              :title="tx('清空')"
+              :disabled="guiding || (!raw && !pendingPaste)"
+              data-sound-custom
+              @click="clearWithSound"
+            />
+            <UButton
+              color="neutral"
+              variant="ghost"
+              size="sm"
+              class="secret-action"
+              :icon="revealed ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+              :aria-label="tx(revealed ? '隐藏密钥' : '显示密钥')"
+              @click="revealed = !revealed"
+            />
+          </div>
+        </template>
       </UInput>
       <SmartPasteReview
         v-if="pendingPaste && !guiding"
@@ -347,6 +363,7 @@ onBeforeUnmount(() => {
         @select="acceptPaste"
         @batch="transferPaste"
         @cancel="pendingPaste = null"
+        @clear="clearWithSound"
         @inspect="inspectPaste"
       />
       <PasteNotice v-if="extracted && !pendingPaste" :message="extracted" :source="originalInput" />
@@ -389,11 +406,12 @@ onBeforeUnmount(() => {
       <div class="advanced">
         <button
           class="advanced-toggle"
+          data-sound-custom
           :disabled="guiding"
           :aria-label="tx('验证参数')"
           :aria-expanded="advanced && !guiding"
           aria-controls="verification-options"
-          @click="advanced = !advanced"
+          @click="toggleAdvanced"
         >
           <span class="parameter-sky" :class="{ 'is-moon': advanced }" aria-hidden="true">
             <span class="parameter-sun" />
@@ -541,6 +559,23 @@ onBeforeUnmount(() => {
     'PingFang SC',
     'Microsoft YaHei',
     sans-serif;
+}
+.secret-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+}
+.secret-action {
+  width: 2.25rem;
+  height: 2.25rem;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  justify-content: center;
+}
+.secret-action:disabled {
+  opacity: 1;
+  color: var(--ui-text-highlighted);
+  cursor: default;
 }
 .advanced-stage {
   display: grid;

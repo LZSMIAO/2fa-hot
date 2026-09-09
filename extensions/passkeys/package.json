@@ -1,0 +1,19 @@
+{
+  "name": "2fa-hot-passkeys",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "tldts": "^7.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "@simplewebauthn/server": "^13.0.0"
+  }
+}

@@ -10,12 +10,19 @@ defineProps<{
 }>()
 
 const model = defineModel<string | number>()
+
+function select(value: string | number) {
+  if (value === model.value) return
+  model.value = value
+  window.dispatchEvent(new CustomEvent('2fa-ui-sound', { detail: 'select' }))
+}
 </script>
 
 <template>
   <USelectMenu
     :id="id"
-    v-model="model"
+    :model-value="model"
+    @update:model-value="select"
     :items="items"
     value-key="value"
     class="mc-select"

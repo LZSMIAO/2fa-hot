@@ -6,6 +6,7 @@ const emit = defineEmits<{
   select: [config: OtpConfig, source: string]
   batch: [text: string]
   cancel: []
+  clear: []
   inspect: [source: string]
 }>()
 const { tx } = useMessages()
@@ -92,14 +93,26 @@ function useSelected() {
         :style="{ WebkitTextSecurity: concealed ? 'disc' : undefined }"
         :ui="{ base: 'paste-source-input font-mono text-base' }"
       />
-      <UButton
-        color="neutral"
-        variant="ghost"
-        size="sm"
-        :icon="concealed ? 'i-lucide-eye' : 'i-lucide-eye-off'"
-        :aria-label="tx(concealed ? '显示密钥' : '隐藏密钥')"
-        @click="concealed = !concealed"
-      />
+      <div class="paste-source-actions">
+        <UButton
+          color="neutral"
+          variant="ghost"
+          size="sm"
+          icon="i-lucide-eraser"
+          :aria-label="tx('清空')"
+          :title="tx('清空')"
+          data-sound-custom
+          @click="emit('clear')"
+        />
+        <UButton
+          color="neutral"
+          variant="ghost"
+          size="sm"
+          :icon="concealed ? 'i-lucide-eye' : 'i-lucide-eye-off'"
+          :aria-label="tx(concealed ? '显示密钥' : '隐藏密钥')"
+          @click="concealed = !concealed"
+        />
+      </div>
     </div>
     <div class="paste-options" aria-live="polite">
       <div v-if="result.candidates.length > 1" class="paste-review-toolbar">
@@ -243,7 +256,7 @@ function useSelected() {
   border: 0;
   box-shadow: none;
   outline: none;
-  padding-inline-end: 4rem;
+  padding-inline-end: 5.25rem;
   scrollbar-gutter: stable;
   height: 50px;
   min-height: 50px;
@@ -251,11 +264,17 @@ function useSelected() {
   resize: none;
   overflow: auto;
 }
-.paste-source > button {
+.paste-source-actions {
   position: absolute;
   top: 2px;
-  right: 10px;
-  width: 2.75rem;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+}
+.paste-source-actions > button {
+  width: 2.25rem;
+  min-width: 2.25rem;
   height: 2.75rem;
   justify-content: center;
 }

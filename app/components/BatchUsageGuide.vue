@@ -109,7 +109,7 @@ function start() {
   step.value = 1
   emit('step', 1)
   narration.restart()
-  window.dispatchEvent(new CustomEvent('2fa-ui-sound', { detail: 'experience' }))
+  window.dispatchEvent(new CustomEvent('2fa-ui-sound', { detail: 'demo' }))
   timer = setInterval(() => {
     if (paused.value || document.hidden) return
     elapsed = advanceGuideTime(
@@ -197,12 +197,14 @@ onBeforeUnmount(() => {
             @click="start"
           />
         </div>
-        <UButton v-if="complete" variant="outline" color="neutral" @click="emit('switchMode')">{{
-          tx('单条取码演示')
-        }}</UButton>
-        <UButton class="primary-button" @click="emit('close')">{{
-          tx(complete ? '我会用了' : '关闭教学')
-        }}</UButton>
+        <div class="batch-guide-actions">
+          <UButton v-if="complete" variant="outline" color="neutral" @click="emit('switchMode')">{{
+            tx('单条取码演示')
+          }}</UButton>
+          <UButton class="primary-button" @click="emit('close')">{{
+            tx(complete ? '我会用了' : '关闭教学')
+          }}</UButton>
+        </div>
       </div>
     </div>
   </aside>
@@ -276,6 +278,16 @@ onBeforeUnmount(() => {
   display: flex;
   justify-content: space-between;
   gap: 0.75rem;
+}
+.batch-guide-actions {
+  display: flex;
+  margin-inline-start: auto;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+.batch-guide-actions > :deep(button) {
+  min-height: 3rem;
+  padding-block: 0.5rem;
 }
 .batch-guide-cursor {
   position: fixed;

@@ -264,16 +264,9 @@
 }
 .mc-select-item[data-state='checked'] {
   background: var(--mc-menu-selected) !important;
+  box-shadow: none;
   font-weight: 650;
   color: white;
-}
-.mc-select-item[data-state='checked'][data-highlighted] {
-  background: var(--mc-menu-hover) !important;
-  color: white;
-}
-.mc-select-item[data-highlighted]::before,
-.mc-select-item[data-state='checked'][data-highlighted]::before {
-  background: transparent !important;
 }
 .mc-select-item-label {
   font-family: var(--font-sans);

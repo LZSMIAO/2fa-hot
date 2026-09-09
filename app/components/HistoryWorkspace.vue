@@ -223,6 +223,7 @@ const date = (v: number) =>
             class="history-autosave"
             color="neutral"
             variant="outline"
+            :aria-pressed="vault.enabled.value"
             :disabled="vault.busy.value"
             @click="run(vault.toggle)"
             >{{ tx(vault.enabled.value ? '关闭自动保存' : '开启自动保存') }}</UButton

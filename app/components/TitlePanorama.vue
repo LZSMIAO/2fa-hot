@@ -257,8 +257,19 @@ onBeforeUnmount(() => {
 @media (max-width: 700px), (max-height: 500px) and (pointer: coarse) {
   .title-panorama {
     inset: 0 auto auto 0;
-    height: 100svh;
-    --face-size: max(100vw, 100svh);
+    width: 100%;
+    height: 100vh;
+    height: 100lvh;
+    --face-size: max(100vw, 100vh);
+    --face-size: max(100vw, 100lvh);
+    contain: strict;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+  .panorama-camera,
+  .panorama-light,
+  .panorama-shade {
+    transform: translateZ(0);
   }
   .panorama-control {
     position: absolute;
