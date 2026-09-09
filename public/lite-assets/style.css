@@ -1,0 +1,217 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: #f3f4ef;
+  color: #242820;
+  font:
+    16px/1.6 Arial,
+    'Microsoft JhengHei',
+    'Microsoft YaHei',
+    sans-serif;
+}
+.page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 28px 24px;
+}
+a {
+  color: #345c25;
+  text-decoration: underline;
+}
+.header {
+  border-bottom: 2px solid #293c25;
+  padding-bottom: 16px;
+}
+.brand {
+  font-size: 23px;
+  font-weight: bold;
+  color: #242820;
+  text-decoration: none;
+}
+.mode {
+  margin-left: 12px;
+  padding: 2px 8px;
+  background: #dfe8d7;
+  font-size: 13px;
+}
+.full {
+  float: right;
+  padding-top: 5px;
+}
+.languages {
+  margin: 14px 0 26px;
+}
+.languages button {
+  min-height: 36px;
+  font-size: 13px;
+  margin: 0 6px 4px 0;
+  padding: 4px 10px;
+}
+.languages button[aria-pressed='true'] {
+  background: #293c25;
+  color: #fff;
+  border-color: #293c25;
+}
+h1 {
+  font-size: 30px;
+  line-height: 1.25;
+  margin: 0 0 12px;
+}
+.lead {
+  color: #50584c;
+  margin: 0 0 24px;
+}
+.panel {
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #a5ae9d;
+}
+label {
+  display: block;
+  font-weight: bold;
+}
+input,
+select,
+button {
+  font: inherit;
+  border-radius: 0;
+}
+input[type='text'],
+input[type='password'],
+select {
+  display: block;
+  width: 100%;
+  height: 44px;
+  padding: 6px 9px;
+  border: 1px solid #77826f;
+  color: #242820;
+  background: #fff;
+}
+input:focus,
+select:focus,
+button:focus,
+a:focus {
+  outline: 2px solid #345c25;
+  outline-offset: 2px;
+}
+.hint {
+  font-size: 13px;
+  color: #515b49;
+  margin: 8px 0;
+}
+.reveal {
+  font-size: 14px;
+  font-weight: normal;
+  padding: 6px 0;
+}
+.options {
+  margin: 16px -5px;
+  font-size: 0;
+}
+.options label {
+  display: inline-block;
+  vertical-align: top;
+  width: 33.333%;
+  padding: 0 5px;
+  font-size: 13px;
+}
+.options select,
+.options input {
+  margin-top: 4px;
+  font-size: 16px;
+}
+button {
+  min-height: 44px;
+  padding: 8px 16px;
+  cursor: pointer;
+  background: #fff;
+  color: #293c25;
+  border: 1px solid #77826f;
+  margin: 0 5px 4px 0;
+}
+button:hover {
+  background: #e9eee3;
+}
+button.primary {
+  color: #fff;
+  background: #345c25;
+  border-color: #345c25;
+}
+button.primary:hover {
+  background: #29491d;
+}
+button:disabled {
+  cursor: default;
+  color: #62685d;
+  background: #e5e8e0;
+  border-color: #a5ae9d;
+}
+.error {
+  color: #a02020;
+  margin: 8px 0;
+}
+.error:empty {
+  display: none;
+}
+.result {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid #c4cbbc;
+}
+input.code {
+  border: 0;
+  background: #f3f4ef;
+  height: 76px;
+  margin-top: 8px;
+  text-align: center;
+  font:
+    bold 38px/1.5 Consolas,
+    'Courier New',
+    monospace;
+  letter-spacing: 5px;
+}
+.countdown {
+  text-align: center;
+  color: #515b49;
+  font-size: 14px;
+  margin: 8px 0 16px;
+}
+.manual {
+  display: none;
+  margin-top: 12px;
+  font-size: 13px;
+}
+.privacy {
+  font-size: 13px;
+  color: #515b49;
+  margin: 20px 0;
+}
+.footer {
+  border-top: 1px solid #b5bcad;
+  padding-top: 14px;
+  font-size: 12px;
+  color: #515b49;
+}
+.footer a {
+  float: right;
+}
+@media (max-width: 420px) {
+  .page {
+    padding: 18px 14px;
+  }
+  .panel {
+    padding: 16px;
+  }
+  h1 {
+    font-size: 25px;
+  }
+  input.code {
+    font-size: 30px;
+    letter-spacing: 3px;
+  }
+  .options label {
+    font-size: 12px;
+  }
+}

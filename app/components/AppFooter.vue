@@ -8,6 +8,13 @@ const { tx, locale } = useMessages()
       <a class="footer-brand" href="https://2fa.hot">2fa.hot</a>
       <nav :aria-label="tx('页脚导航')">
         <div class="footer-pages">
+          <a
+            :href="
+              '/lite?lang=' +
+              (locale === 'zh-TW' ? 'zh-TW' : locale.startsWith('zh') ? 'zh-CN' : 'en')
+            "
+            >Lite</a
+          >
           <NuxtLink :to="localePath('/guides', locale.startsWith('zh') ? 'zh-CN' : 'en')"
             >2FA / TOTP</NuxtLink
           >

@@ -32,6 +32,8 @@ More features are being integrated…
 
 ## What exactly can it do
 
+- [Lite](https://2fa.hot/lite?lang=en): single-secret codes, copying and fragment links without animation, sound or the main app framework. English, Simplified and Traditional Chinese; targets IE11 compatibility.
+
 - Single and batch codes: supports Base32 secrets and otpauth:// configuration links.
 - QR import: images, drag and drop, or camera; supports Google Authenticator exports, multiple accounts and multi-part exports. Collect all parts, then select the accounts you need.
 - Direct links: supports fragment links that display the current code, with one-click copying and batch link generation.

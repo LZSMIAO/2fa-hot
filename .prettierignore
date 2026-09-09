@@ -3,3 +3,4 @@ pnpm-lock.yaml
 .output
 .wrangler
 node_modules
+public/lite-assets/sha.js

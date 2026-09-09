@@ -3,7 +3,12 @@ const localePath = useLocalePath()
 import { isPrivatePage, unlocalizedPath } from '~~/shared/seo/routes'
 import ButtonSoundToggle from './ButtonSoundToggle.vue'
 
-const { tx } = useMessages()
+const { tx, locale } = useMessages()
+const liteHref = computed(
+  () =>
+    '/lite?lang=' +
+    (locale.value === 'zh-TW' ? 'zh-TW' : locale.value.startsWith('zh') ? 'zh-CN' : 'en')
+)
 const route = useRoute()
 const colorMode = useColorMode()
 // Keep navigation controls in the standard Nuxt UI style, including teleported menus.
@@ -45,6 +50,7 @@ const themes = computed(() => [
   }
 ])
 const menu = computed(() => [
+  { label: 'Lite', to: liteHref.value, external: true },
   { label: tx('本地历史'), to: localePath('/history'), icon: 'i-lucide-history' },
   { label: tx('使用说明'), to: localePath('/help'), icon: 'i-lucide-book-open' },
   { label: tx('隐私说明'), to: localePath('/privacy'), icon: 'i-lucide-shield-check' }
@@ -66,6 +72,7 @@ const menu = computed(() => [
             tx('本地历史')
           }}</NuxtLink
           ><NuxtLink :to="localePath('/help')" active-class="active">{{ tx('使用说明') }}</NuxtLink>
+          <a :href="liteHref">Lite</a>
         </nav>
         <div class="header-actions">
           <LanguagePicker />
