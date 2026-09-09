@@ -21,20 +21,27 @@ function time(value: number) {
         {{ tx('清空') }}
       </button>
     </div>
-    <div v-if="vault.recent.value.length" class="session-rows">
-      <button
-        v-for="row in vault.recent.value"
-        :key="row.id"
-        class="session-row"
-        @click="select(row)"
-      >
-        <time>{{ time(row.usedAt) }}</time>
-        <span class="session-label">{{ row.label || row.issuer || tx('未命名记录') }}</span>
-        <code>{{ row.secret.slice(0, 4) }}••••{{ row.secret.slice(-4) }}</code>
-        <UIcon name="i-lucide-arrow-up-right" />
-      </button>
+    <div
+      class="session-body"
+      :class="{ 'is-empty': !vault.recent.value.length }"
+      :style="{ height: `${Math.min(vault.recent.value.length * 2.75, 10)}rem` }"
+      :inert="!vault.recent.value.length"
+      :aria-hidden="!vault.recent.value.length"
+    >
+      <div v-if="vault.recent.value.length" class="session-rows">
+        <button
+          v-for="row in vault.recent.value"
+          :key="row.id"
+          class="session-row"
+          @click="select(row)"
+        >
+          <time>{{ time(row.usedAt) }}</time>
+          <span class="session-label">{{ row.label || row.issuer || tx('未命名记录') }}</span>
+          <code>{{ row.secret.slice(0, 4) }}••••{{ row.secret.slice(-4) }}</code>
+          <UIcon name="i-lucide-arrow-up-right" />
+        </button>
+      </div>
     </div>
-    <p v-else>{{ tx('输入密钥后，最近使用的记录会出现在这里。') }}</p>
   </section>
 </template>
 <style scoped>
@@ -61,19 +68,34 @@ function time(value: number) {
   margin-inline-start: auto;
 }
 .session-history p {
-  margin: 0.375rem 0 0;
+  margin: 0;
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
   font-size: var(--text-label);
 }
-.session-rows {
-  max-height: 10rem;
-  overflow-y: auto;
+.session-body {
   margin-top: 0.5rem;
+  overflow: hidden;
+  transition:
+    height 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    margin-top 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.session-body.is-empty {
+  margin-top: 0;
+}
+.session-rows {
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  animation: session-appear 240ms ease-out;
 }
 .session-row {
   display: flex;
   align-items: center;
   gap: 1rem;
   width: 100%;
+  height: 2.75rem;
   padding: 0.625rem 0;
   border-top: 1px solid var(--ui-border);
   text-align: start;
@@ -85,6 +107,22 @@ function time(value: number) {
 }
 .session-row time {
   color: var(--ui-text-muted);
+}
+@keyframes session-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .session-body {
+    transition: none;
+  }
+  .session-rows {
+    animation: none;
+  }
 }
 .session-label {
   flex: 1;

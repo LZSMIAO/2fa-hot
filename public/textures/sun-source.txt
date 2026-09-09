@@ -1,0 +1,3 @@
+Original Minecraft sun texture, Mojang Studios.
+Source: https://github.com/Mojang/bedrock-samples/blob/main/resource_pack/textures/environment/sun.png
+Downloaded unchanged from Mojang's official Bedrock samples.

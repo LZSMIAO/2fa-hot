@@ -47,7 +47,7 @@ const related = computed(() => entries.value.filter((item) => item.slug !== guid
       </li>
     </ul>
     <p>
-      <NuxtLink :to="localePath('/')">{{ tx('返回验证码工具') }}</NuxtLink> ·
+      <NuxtLink :to="localePath('/')">{{ tx('返回工具') }}</NuxtLink> ·
       <NuxtLink :to="localePath('/help')">{{ tx('使用说明') }}</NuxtLink>
     </p>
   </article>

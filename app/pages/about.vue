@@ -21,7 +21,7 @@ const sections = computed(() => document.value.sections)
 <template>
   <article class="content-page">
     <NuxtLink :to="localePath('/')" class="back-link"
-      ><UIcon name="i-lucide-arrow-left" />{{ tx('返回验证码工具') }}</NuxtLink
+      ><UIcon name="i-lucide-arrow-left" />{{ tx('返回工具') }}</NuxtLink
     >
     <h1>{{ tx('关于') }} 2fa.hot</h1>
     <p

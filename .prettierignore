@@ -3,4 +3,3 @@ pnpm-lock.yaml
 .output
 .wrangler
 node_modules
-docs/design/*.png

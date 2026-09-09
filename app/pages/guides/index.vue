@@ -11,7 +11,7 @@ const entries = computed(() => guides[chinese.value ? 'zh-CN' : 'en'])
 <template>
   <article class="content-page">
     <NuxtLink :to="localePath('/')" class="back-link"
-      ><UIcon name="i-lucide-arrow-left" />{{ tx('返回验证码工具') }}</NuxtLink
+      ><UIcon name="i-lucide-arrow-left" />{{ tx('返回工具') }}</NuxtLink
     >
     <h1>{{ chinese ? '2FA 与 TOTP 使用指南' : '2FA & TOTP guides' }}</h1>
     <p class="article-lead">

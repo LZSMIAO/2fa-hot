@@ -26,6 +26,14 @@ const codeElement = useTemplateRef<HTMLElement>('codeElement')
 const config = computed(() => props.config)
 const digitCount = computed(() => props.config?.digits ?? 6)
 const { code, error: calculationError, remaining, progress, current } = useOtp(config)
+const showResultLinks = computed(
+  () =>
+    !!config.value &&
+    !!code.value &&
+    !props.error &&
+    !calculationError.value &&
+    config.value.kind !== 'steam'
+)
 const { copied, message, copy } = useCopy()
 const { copied: linkCopied, message: linkMessage, copy: copyLink } = useCopy()
 async function handleLink() {
@@ -192,7 +200,13 @@ async function expand() {
         class="expand-button"
         :aria-label="tx(standalone ? '缩小验证码' : '放大验证码')"
         :title="tx(standalone ? '返回工具首页' : '放大到独立取码页')"
-        :disabled="!config || !!error || !!calculationError || guideStep !== undefined"
+        :disabled="
+          !config ||
+          config.kind === 'steam' ||
+          !!error ||
+          !!calculationError ||
+          guideStep !== undefined
+        "
         @pointerenter="prepareSizeChange"
         @focus="prepareSizeChange"
         @click="expand"
@@ -264,18 +278,31 @@ async function expand() {
   <p class="sr-only" role="status">{{ tx(copyConfirmed ? '验证码已复制' : '') }}</p>
   <p v-if="autoHistoryError" class="inline-error" role="alert">{{ tx(autoHistoryError) }}</p>
   <p v-if="message || note" class="inline-notice" role="status">{{ tx(message || note) }}</p>
-  <div class="result-links">
-    <button
-      class="text-action"
-      :disabled="!config || guideStep !== undefined"
-      @click="exportMode = 'qr'"
-    >
-      <UIcon name="i-lucide-qr-code" />{{ tx('二维码') }}</button
-    ><button class="text-action" :disabled="!config || guideStep !== undefined" @click="handleLink">
-      <UIcon :name="standalone && linkCopied ? 'i-lucide-check' : 'i-lucide-link'" />{{
-        tx(standalone ? (linkCopied ? '已复制' : '复制链接') : '获取链接')
-      }}
-    </button>
+  <div
+    class="export-reveal"
+    :class="{ 'is-open': showResultLinks }"
+    :inert="!showResultLinks"
+    :aria-hidden="!showResultLinks"
+  >
+    <div class="export-reveal-inner">
+      <div class="result-links">
+        <button
+          class="text-action"
+          :disabled="!config || guideStep !== undefined"
+          @click="exportMode = 'qr'"
+        >
+          <UIcon name="i-lucide-qr-code" />{{ tx('二维码') }}</button
+        ><button
+          class="text-action"
+          :disabled="!config || guideStep !== undefined"
+          @click="handleLink"
+        >
+          <UIcon :name="standalone && linkCopied ? 'i-lucide-check' : 'i-lucide-link'" />{{
+            tx(standalone ? (linkCopied ? '已复制' : '复制链接') : '获取链接')
+          }}
+        </button>
+      </div>
+    </div>
   </div>
   <p v-if="standalone && linkMessage" class="inline-error" role="alert">{{ tx(linkMessage) }}</p>
   <LazyExportDialog
@@ -287,6 +314,31 @@ async function expand() {
 </template>
 
 <style scoped>
+.export-reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.export-reveal.is-open {
+  grid-template-rows: 1fr;
+}
+.export-reveal-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+.export-reveal .result-links {
+  transform: translateY(-8px);
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.export-reveal.is-open .result-links {
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .export-reveal,
+  .export-reveal .result-links {
+    transition: none;
+  }
+}
 .otp-digits {
   display: grid;
   place-items: center;
@@ -323,9 +375,8 @@ async function expand() {
   grid-area: 1 / 1;
 }
 .otp-slot-value {
-  /* Compensate for VT323’s low numeral ink box without changing transition transforms. */
-  position: relative;
-  top: -0.075em;
+  /* Center the enlarged line box in the fixed slot; do not offset the rolling animation. */
+  font-size: 1.08em;
   line-height: 1;
 }
 .otp-slot-dot {

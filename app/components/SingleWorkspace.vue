@@ -10,21 +10,46 @@ import SmartPasteReview from './SmartPasteReview.vue'
 import MigrationDialog from './MigrationDialog.vue'
 import { isMigrationUri } from '~/utils/ga-migration'
 const migrationSource = shallowRef<string | null>(null)
-const { tx, locale } = useMessages()
-import { parseOtp, defaults, DEMO_SECRET, type Algorithm, type OtpConfig } from '~/utils/otp'
+const { tx } = useMessages()
+import {
+  parseOtp,
+  defaults,
+  DEMO_SECRET,
+  type Algorithm,
+  type OtpConfig,
+  type OtpKind
+} from '~/utils/otp'
 const props = defineProps<{ guideStep?: number }>()
 const emit = defineEmits<{ batch: [value: string]; guideCode: [value: string] }>()
 const guiding = computed(() => props.guideStep !== undefined)
 const raw = shallowRef(''),
   revealed = shallowRef(true),
-  advanced = shallowRef(false),
+  advanced = shallowRef(true),
   qrOpen = shallowRef(false),
   issue = shallowRef(''),
   pasteIssue = shallowRef(''),
   composing = shallowRef(false)
 const algorithm = shallowRef<Algorithm>('SHA-1'),
   digits = shallowRef<6 | 8>(6),
-  period = shallowRef(30)
+  period = shallowRef(30),
+  kind = shallowRef<OtpKind>('totp')
+const kindItems = [
+  { label: 'TOTP', value: 'totp' as const },
+  { label: 'Steam Guard', value: 'steam' as const }
+]
+const algorithmItems = [
+  { label: 'SHA-1', value: 'SHA-1' as const },
+  { label: 'SHA-256', value: 'SHA-256' as const },
+  { label: 'SHA-512', value: 'SHA-512' as const }
+]
+const digitItems = computed(() => [
+  { label: tx('{count} 位', { count: 6 }), value: 6 as const },
+  { label: tx('{count} 位', { count: 8 }), value: 8 as const }
+])
+const periodItems = computed(() => [
+  { label: tx('30 秒'), value: 30 },
+  { label: tx('60 秒'), value: 60 }
+])
 const extracted = shallowRef('')
 const originalInput = shallowRef('')
 const pendingPaste = shallowRef<{ source: string; analysis: PasteAnalysis } | null>(null)
@@ -55,8 +80,10 @@ const config = computed<OtpConfig | null>(() => {
   )
     return null
   try {
+    const kindOptions = kind.value === 'steam' ? { kind: 'steam' as const } : {}
     return parseOtp(raw.value, {
       ...restoredDetails.value,
+      ...kindOptions,
       algorithm: algorithm.value,
       digits: digits.value,
       period: period.value
@@ -65,6 +92,8 @@ const config = computed<OtpConfig | null>(() => {
     return null
   }
 })
+const activeKind = computed(() => config.value?.kind ?? kind.value)
+const steamSelected = computed(() => activeKind.value === 'steam')
 const isUri = computed(() => /^otpauth:/i.test(raw.value.trim()))
 const compactScreen = shallowRef(false)
 const resultExpanded = shallowRef(false)
@@ -97,6 +126,7 @@ watch(
     pendingPaste.value = null
 
     restoredDetails.value = { label: '', issuer: '' }
+    kind.value = 'totp'
     algorithm.value = defaults.algorithm
     digits.value = defaults.digits
     period.value = defaults.period
@@ -105,7 +135,7 @@ watch(
   },
   { flush: 'sync' }
 )
-watch([raw, algorithm, digits, period, composing], () => {
+watch([raw, kind, algorithm, digits, period, composing], () => {
   clearTimeout(validation)
   issue.value = ''
   if (!raw.value.trim() || composing.value) return
@@ -117,6 +147,7 @@ watch([raw, algorithm, digits, period, composing], () => {
     }
     try {
       parseOtp(raw.value, {
+        ...(kind.value === 'steam' ? { kind: 'steam' as const } : {}),
         algorithm: algorithm.value,
         digits: digits.value,
         period: period.value
@@ -138,7 +169,7 @@ function clear() {
 
   raw.value = ''
   revealed.value = true
-  advanced.value = false
+  advanced.value = true
   field.value?.inputRef?.focus()
 }
 async function paste() {
@@ -158,8 +189,9 @@ async function paste() {
 }
 function acceptPaste(value: OtpConfig, source = '') {
   raw.value = value.secret
+  kind.value = value.kind ?? 'totp'
   algorithm.value = value.algorithm
-  digits.value = value.digits
+  digits.value = value.kind === 'steam' || value.digits === 5 ? 6 : value.digits
   period.value = value.period
   restoredDetails.value = { label: value.label, issuer: value.issuer }
   pendingPaste.value = null
@@ -225,6 +257,11 @@ function importValue(value: string) {
   originalInput.value = ''
 
   raw.value = value
+  try {
+    kind.value = parseOtp(value).kind ?? 'totp'
+  } catch {
+    kind.value = 'totp'
+  }
   qrOpen.value = false
 }
 watch(
@@ -234,8 +271,9 @@ watch(
     pendingPaste.value = null
 
     raw.value = value.secret
+    kind.value = value.kind ?? 'totp'
     algorithm.value = value.algorithm
-    digits.value = value.digits
+    digits.value = value.kind === 'steam' || value.digits === 5 ? 6 : value.digits
     period.value = value.period
     restoredDetails.value = { label: value.label, issuer: value.issuer }
     vault.pending.value = undefined
@@ -312,7 +350,9 @@ onBeforeUnmount(() => {
         @inspect="inspectPaste"
       />
       <PasteNotice v-if="extracted && !pendingPaste" :message="extracted" :source="originalInput" />
-      <p id="secret-help" class="field-hint">{{ tx('支持 Base32 密钥和验证器配置链接。') }}</p>
+      <p id="secret-help" class="field-hint">
+        {{ tx('密钥：Base32 / otpauth:// / Steam') }}
+      </p>
       <p
         v-if="!guiding && !pendingPaste && issue"
         id="secret-error"
@@ -350,16 +390,15 @@ onBeforeUnmount(() => {
         <button
           class="advanced-toggle"
           :disabled="guiding"
+          :aria-label="tx('验证参数')"
           :aria-expanded="advanced && !guiding"
           aria-controls="verification-options"
           @click="advanced = !advanced"
         >
-          <span>{{ tx('验证参数') }}</span>
-          <UIcon
-            name="i-lucide-chevron-down"
-            class="disclosure-icon"
-            :class="{ expanded: advanced }"
-          />
+          <span class="parameter-sky" :class="{ 'is-moon': advanced }" aria-hidden="true">
+            <span class="parameter-sun" />
+            <span class="parameter-moon" />
+          </span>
         </button>
         <div class="advanced-stage">
           <div
@@ -372,37 +411,28 @@ onBeforeUnmount(() => {
             <p v-if="isUri" class="field-hint">
               {{ tx('参数由配置链接指定，请在原链接中修改。') }}
             </p>
-            <div v-else class="option-grid">
-              <div>
-                <label for="algorithm">{{ tx('算法') }}</label
-                ><select id="algorithm" v-model="algorithm">
-                  <option>SHA-1</option>
-                  <option>SHA-256</option>
-                  <option>SHA-512</option>
-                </select>
+            <div v-else class="option-grid" :class="{ 'steam-options': steamSelected }">
+              <div class="option-field option-kind">
+                <label for="otp-kind">{{ tx('验证方式') }}</label
+                ><McSelect id="otp-kind" v-model="kind" :items="kindItems" />
               </div>
-              <div>
-                <label for="digits">{{ tx('位数') }}</label
-                ><select id="digits" v-model.number="digits">
-                  <option :value="6">{{ tx('{count} 位', { count: 6 }) }}</option>
-                  <option :value="8">{{ tx('{count} 位', { count: 8 }) }}</option>
-                </select>
-              </div>
-              <div>
-                <label for="period">{{ tx('周期') }}</label
-                ><select id="period" v-model.number="period">
-                  <option v-if="period !== 30 && period !== 60" :value="period">
-                    {{
-                      new Intl.NumberFormat(locale, {
-                        style: 'unit',
-                        unit: 'second',
-                        unitDisplay: 'long'
-                      }).format(period)
-                    }}
-                  </option>
-                  <option :value="30">{{ tx('30 秒') }}</option>
-                  <option :value="60">{{ tx('60 秒') }}</option>
-                </select>
+              <template v-if="!steamSelected">
+                <div class="option-field">
+                  <label for="algorithm">{{ tx('算法') }}</label
+                  ><McSelect id="algorithm" v-model="algorithm" :items="algorithmItems" />
+                </div>
+                <div class="option-field">
+                  <label for="digits">{{ tx('位数') }}</label
+                  ><McSelect id="digits" v-model="digits" :items="digitItems" />
+                </div>
+                <div class="option-field">
+                  <label for="period">{{ tx('周期') }}</label
+                  ><McSelect id="period" v-model="period" :items="periodItems" />
+                </div>
+              </template>
+              <div v-else class="steam-profile" role="status">
+                <span class="steam-profile-title">Steam Guard</span>
+                <span>{{ tx('{digits} 位 · 每 {period} 秒更新', { digits: 5, period: 30 }) }}</span>
               </div>
             </div>
           </div>
@@ -446,8 +476,71 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .advanced-toggle {
-  position: relative;
+  position: absolute;
+  inset-inline-end: 0;
+  top: -1.375rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  justify-content: center;
+  background: var(--panel);
+  cursor: pointer;
   z-index: 1;
+}
+.advanced {
+  position: relative;
+  padding-top: 0.75rem;
+}
+.parameter-sky {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+.parameter-sun,
+.parameter-moon {
+  position: absolute;
+  inset: 0;
+  image-rendering: pixelated;
+  background: var(--panel) url('/textures/sun.png') center / 3rem 3rem no-repeat;
+  background-blend-mode: screen;
+  mask-image: radial-gradient(circle at center, #000 20%, rgb(0 0 0 / 80%) 35%, transparent 68%);
+  pointer-events: none;
+  transition:
+    opacity 240ms ease-out,
+    transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.parameter-moon {
+  background-image: url('/textures/moon_phases.png');
+  background-size: 11rem 5.5rem;
+  background-position: left top;
+  opacity: 0;
+  transform: translateY(65%);
+}
+.is-moon .parameter-sun {
+  opacity: 0;
+  transform: translateY(-65%);
+}
+.is-moon .parameter-moon {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .parameter-sun,
+  .parameter-moon {
+    transition: none;
+  }
+}
+.option-grid {
+  font-family:
+    system-ui,
+    -apple-system,
+    'PingFang SC',
+    'Microsoft YaHei',
+    sans-serif;
 }
 .advanced-stage {
   display: grid;
@@ -462,6 +555,43 @@ onBeforeUnmount(() => {
 }
 .advanced-options {
   align-self: start;
+}
+.advanced-stage > .desert-accent.is-hidden {
+  display: none;
+}
+.option-field {
+  min-width: 0;
+}
+.option-grid.steam-options {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+}
+.steam-profile {
+  display: flex;
+  align-items: center;
+  align-self: end;
+  gap: 0.75rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--ore-outline);
+  background: var(--ore-control);
+  box-shadow: var(--ore-bevel);
+  color: var(--ui-text-highlighted);
+  font-size: var(--text-caption);
+}
+.steam-profile-title {
+  font-family: 'VT323', monospace;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+@media (max-width: 700px) {
+  .option-grid.steam-options {
+    grid-template-columns: 1fr;
+  }
+  .steam-profile {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
 }
 </style>
 

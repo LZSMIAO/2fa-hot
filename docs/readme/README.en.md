@@ -29,22 +29,19 @@ More features are being integrated…
 - Direct links: supports fragment links that display the current code, with one-click copying and batch link generation.
 - Local history: off by default, with opt-in storage, optional encryption, backup and restore.
 - 30 languages: mobile layouts and light/dark themes. Need help? Follow the diamond sword through the tutorial.
-- Google Authenticator import: choose “Transfer accounts → Export accounts” in Google Authenticator, then scan/upload through “Import QR code → Google Authenticator” here to export your secrets elsewhere.
 
-Supports TOTP, SHA-1/SHA-256/SHA-512 and 6/8-digit codes. HOTP and Steam-specific formats do not generate codes here; HOTP/MD5 accounts in migration files can be parsed and exported.
+Supports TOTP (SHA-1/SHA-256/SHA-512, 6/8 digits) and Steam Guard (5 characters, 30 seconds). For Steam, enter a shared_secret or paste maFile JSON content. HOTP code generation is not supported; HOTP/MD5 accounts in migration files can be parsed and exported.
 
 ## How to use it
 
-1. Copy your 2FA secret and paste it into 2fa.hot, or import a QR code.
-2. Copy and use the current code before the countdown ends.
+- Copy your 2FA secret and paste it into 2fa.hot, or import a QR code.
+- Copy and use the current code before the countdown ends.
 
 ## Secret storage and access
 
-Homepage code generation and QR recognition happen entirely in your browser.
-
-When you enable local history, records are stored in your browser. You can set a password for encryption, or leave it unset and view records directly.
-
-New direct links use `/2fa#SECRET`. The secret and verification parameters after `#` are read locally by your browser and are not sent to the hosting service with the page request. Legacy `/2fa/SECRET` links still send the secret with the request; use the new format instead. Full links still contain secrets and may remain in browser history.
+- Homepage code generation and QR recognition happen entirely in your browser.
+- When you enable local history, records are stored in your browser. You can set a password for encryption, or leave it unset and view records directly.
+- New direct links use `/2fa#SECRET`. The secret and verification parameters after `#` are read locally by your browser and are not sent to the hosting service with the page request. Legacy `/2fa/SECRET` links still send the secret with the request; use the new format instead. Full links still contain secrets and may remain in browser history.
 
 Finally, do not share them publicly or with anyone you do not trust. Forgotten local-history passphrases cannot be recovered.
 

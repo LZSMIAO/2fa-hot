@@ -95,4 +95,4 @@ node .output/server/index.mjs
 
 ## SEO 上线
 
-发布后按 [SEO 实施与跟踪](SEO.md) 提交 sitemap，并使用 Search Console 检查实际收录。私密路由限制同时适用于所有语言前缀。
+发布后向 Search Console 提交 `/sitemap.xml` 并检查收录。可运行 `node scripts/check-seo.mjs https://你的域名` 检查页面响应与索引设置；私密路由限制适用于所有语言前缀。

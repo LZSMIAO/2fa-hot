@@ -1,0 +1,3 @@
+Original Minecraft moon phases texture, Mojang Studios.
+Source: https://github.com/Mojang/bedrock-samples/blob/main/resource_pack/textures/environment/moon_phases.png
+Downloaded unchanged. The UI displays the first full-moon tile using CSS background positioning.
