@@ -3,12 +3,15 @@ import type { SupportedLocale } from '../locales'
 // Localize the product title and purpose; retain standard 2FA / TOTP terminology.
 export const toolHeadings: Record<SupportedLocale, string> = {
   en: '2FA.HOT | Online two-factor code generation | Secure OTP codes | Elegant authenticator inspired by Minecraft design',
-  'zh-CN': '2FA.HOT｜在线双重验证码生成｜安全获取OTP代码｜优雅设计身份验证器,参考 Minecraft 风格设计',
-  'zh-TW': '2FA.HOT｜線上雙重驗證碼產生｜安全取得 OTP 代碼｜優雅設計身份驗證器，參考 Minecraft 風格設計',
+  'zh-CN':
+    '2FA.HOT｜在线双重验证码生成｜安全获取OTP代码｜优雅设计身份验证器,参考 Minecraft 风格设计',
+  'zh-TW':
+    '2FA.HOT｜線上雙重驗證碼產生｜安全取得 OTP 代碼｜優雅設計身份驗證器，參考 Minecraft 風格設計',
   es: '2FA.HOT | Generador de códigos 2FA en línea | Códigos OTP seguros | Autenticador de diseño elegante inspirado en Minecraft',
   fr: '2FA.HOT | Générateur de codes 2FA en ligne | Codes OTP sécurisés | Authentificateur au design élégant inspiré de Minecraft',
   de: '2FA.HOT | Online-Generator für 2FA-Codes | Sichere OTP-Codes | Eleganter Authenticator im Minecraft-inspirierten Design',
-  'pt-BR': '2FA.HOT | Gerador de códigos 2FA online | Códigos OTP seguros | Autenticador elegante inspirado em Minecraft',
+  'pt-BR':
+    '2FA.HOT | Gerador de códigos 2FA online | Códigos OTP seguros | Autenticador elegante inspirado em Minecraft',
   ru: '2FA.HOT | Онлайн-генератор кодов 2FA | Безопасные OTP-коды | Элегантный аутентификатор в стиле Minecraft',
   ja: '2FA.HOT｜オンライン2FAコード生成｜安全なOTPコード｜Minecraft風の優雅な認証ツール',
   ko: '2FA.HOT | 온라인 2FA 코드 생성 | 안전한 OTP 코드 | Minecraft 스타일의 우아한 인증 도구',
