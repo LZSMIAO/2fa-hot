@@ -26,11 +26,13 @@ More features are being integrated…
 
 [![2fa.hot](../../assets/home-en.png)](https://2fa.hot)
 
-[Start](https://2fa.hot) · [Help](https://2fa.hot/help) · [Security](../../.github/SECURITY.md)
+[Start](https://2fa.hot) · [Help](https://2fa.hot/help) · [Wait list](../WAITLIST.md) · [Make a wish](https://github.com/LZSMIAO/2fa-hot/issues/new?template=feature-request.yml) · [Security](../../.github/SECURITY.md)
 
 <!-- website:body:start -->
 
 ## What exactly can it do
+
+Have a feature in mind? Explore the [feature wish list](https://2fa.hot/waitlist) and share your ideas on GitHub.
 
 - [Lite](https://2fa.hot/lite?lang=en): single-secret codes, copying and fragment links without animation, sound or the main app framework. English, Simplified and Traditional Chinese; targets IE11 compatibility.
 
@@ -51,7 +53,7 @@ Supports TOTP (SHA-1/SHA-256/SHA-512, 6/8 digits) and Steam Guard (5 characters,
 
 - Homepage code generation and QR recognition happen entirely in your browser.
 - When you enable local history, records are stored in your browser. You can set a password for encryption, or leave it unset and view records directly.
-- New direct links use `/2fa#SECRET`. The secret and verification parameters after `#` are read locally by your browser and are not sent to the hosting service with the page request. Legacy `/2fa/SECRET` links still send the secret with the request; use the new format instead. Full links still contain secrets and may remain in browser history.
+- Use `/2fa#SECRET`: the fragment after `#` is not sent with the page request and is read locally by this tool. `/2fa/SECRET` sends the secret in the path to the hosting service. A page warning cannot intercept the initial request; HTTPS does not hide the path from its recipient. Path links display an MC Tip with a fragment-link action and an explanation. If you used a path link, consider generating a replacement secret at the original service and confirming the previous one is invalid. Switching to `#` cannot undo earlier requests. Full links may remain in browser history; never share them publicly.
 
 Finally, do not share them publicly or with anyone you do not trust. Forgotten local-history passphrases cannot be recovered.
 

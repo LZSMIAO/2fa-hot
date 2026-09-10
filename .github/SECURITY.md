@@ -15,8 +15,8 @@ Security fixes target the latest `main` branch. Self-hosted deployments need to 
 ## Privacy boundaries
 
 - Homepage code generation and QR decoding run in the browser without a server-side code-generation API.
-- New `/2fa#SECRET` links keep secrets and parameters in the URL fragment, which is not sent in the HTTP page request. Full links still contain secrets and may remain in browser history or be read by page scripts and permitted extensions.
-- Legacy `/2fa/SECRET` links send secrets to the hosting service. New fragment links cannot undo earlier requests.
+- Fragment links (`/2fa#SECRET`) keep secrets and parameters after `#`, which is not sent in the HTTP page request. Full links still contain secrets and may remain in browser history or be read by page scripts and permitted extensions.
+- Path links (`/2fa/SECRET`) send secrets to the hosting service. The page shows a warning and offers a fragment link, but neither action can undo earlier requests.
 - Local history is opt-in. Password protection encrypts it; without a password, records are stored unencrypted in the current browser. Use a strong, independent passphrase.
 - Local encryption does not protect a compromised device, page script or extension. Forgotten passphrases cannot be recovered. Keep backups and clipboard contents private.
 

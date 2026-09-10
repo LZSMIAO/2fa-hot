@@ -12,6 +12,7 @@ export const publicPages = [
   '/help',
   '/privacy',
   '/about',
+  '/waitlist',
   '/guides',
   ...guideSlugs.map((slug) => `/guides/${slug}`)
 ]

@@ -51,6 +51,9 @@ export function useSiteSeo() {
               ? '關於 2fa.hot — 本地 2FA/TOTP 驗證碼工具'
               : `${tx('关于')} | 2fa.hot`
       description = toolDescriptions[language] || toolDescriptions.en
+    } else if (path === '/waitlist') {
+      title = `${tx('功能许愿')} · Wait list | 2fa.hot`
+      description = tx('看看接下来想做什么，也告诉我们你想要的功能。')
     } else if (path === '/guides') {
       title = `${guideTitle} | 2fa.hot`
       description = chinese

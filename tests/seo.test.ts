@@ -27,8 +27,10 @@ test('sitemap only advertises public, translated canonical pages with reciprocal
       assert.ok(locations.includes(alternate[1]!), alternate[1])
     assert.ok(entry.includes('hreflang="x-default"'))
   }
-  for (const { code } of supportedLocales)
+  for (const { code } of supportedLocales) {
     assert.ok(locations.includes(`https://2fa.hot${localizedPath('/', code)}`))
+    assert.ok(locations.includes(`https://2fa.hot${localizedPath('/waitlist', code)}`))
+  }
   assert.ok(
     !locations.includes('https://2fa.hot/fr/about'),
     'untranslated editorial pages are not advertised'

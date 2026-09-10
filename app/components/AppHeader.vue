@@ -56,6 +56,7 @@ const menu = computed(() => [
   { label: 'Lite', to: liteHref.value, external: true },
   { label: tx('本地历史'), to: localePath('/history'), icon: 'i-lucide-history' },
   { label: tx('使用说明'), to: localePath('/help'), icon: 'i-lucide-book-open' },
+  { label: tx('功能许愿'), to: localePath('/waitlist'), icon: 'i-lucide-plus' },
   { label: tx('隐私说明'), to: localePath('/privacy'), icon: 'i-lucide-shield-check' }
 ])
 </script>

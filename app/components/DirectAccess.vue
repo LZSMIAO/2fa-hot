@@ -42,8 +42,10 @@ watch([input, composing], (_, __, onCleanup) => {
   onCleanup(() => clearTimeout(timer))
 })
 const fragment = shallowRef('')
+const pathWarning = shallowRef(false)
 const missing = computed(() => !route.params.secret && !fragment.value)
 function load() {
+  pathWarning.value = Boolean(route.params.secret)
   config.value = null
   issue.value = ''
   fragment.value = route.hash
@@ -72,6 +74,10 @@ function load() {
   } catch (e) {
     issue.value = (e as Error).message
   }
+}
+function useFragmentLink() {
+  if (!config.value) return
+  return navigateTo(localePath(toAccessPath(config.value)), { replace: true })
 }
 function submit() {
   if (pendingPaste.value) return
@@ -156,6 +162,60 @@ useHead({ meta: [{ name: 'referrer', content: 'no-referrer' }] })
 </script>
 <template>
   <div class="direct-page">
+    <UModal
+      v-model:open="pathWarning"
+      :dismissible="false"
+      :close="false"
+      :title="tx('MC Tip · 密钥隐私提醒')"
+      :description="
+        tx(
+          '密钥在网址路径中。直接打开此链接时，路径已随页面请求发送至托管服务；本提示无法撤回或阻止已发出的请求。'
+        )
+      "
+    >
+      <template #body>
+        <div class="path-warning-copy">
+          <p>
+            <code dir="ltr">/2fa#YOUR_SECRET</code>
+          </p>
+          <p>
+            {{
+              tx(
+                '建议改用 # 链接：# 后的密钥不会随页面请求发送，但完整链接仍可能留在浏览器历史中，请勿公开分享。'
+              )
+            }}
+          </p>
+          <p>
+            {{
+              tx(
+                '改用 # 链接只减少后续请求中的暴露，无法撤回已经发送的密钥，也不会替你更新原服务的密钥。'
+              )
+            }}
+          </p>
+          <p class="path-warning-advice">
+            {{
+              tx(
+                '密钥可能留在托管服务或代理的访问记录中，这不代表已被他人获取。建议到原网站或 App 的双重验证设置中重新生成密钥，并确认原密钥已失效；不要在这里随意修改字符。'
+              )
+            }}
+          </p>
+        </div>
+      </template>
+      <template #footer>
+        <div class="path-warning-actions">
+          <UButton v-if="config" class="primary-button" @click="useFragmentLink">{{
+            tx('改用 # 链接')
+          }}</UButton>
+          <UButton :to="localePath('/help#link-privacy')" color="neutral" variant="link">{{
+            tx('为什么使用 #？')
+          }}</UButton>
+          <UButton color="neutral" variant="outline" @click="pathWarning = false">{{
+            tx('继续')
+          }}</UButton>
+          <UButton color="neutral" variant="ghost" @click="clear">{{ tx('返回首页') }}</UButton>
+        </div>
+      </template>
+    </UModal>
     <NuxtLink :to="localePath('/')" class="back-link"
       ><UIcon name="i-lucide-arrow-left" />{{ tx('返回首页') }}</NuxtLink
     >
@@ -206,7 +266,7 @@ useHead({ meta: [{ name: 'referrer', content: 'no-referrer' }] })
       }}</UButton>
     </div>
     <div v-else class="direct-result">
-      <OtpResult :config="config" standalone />
+      <OtpResult :config="pathWarning ? null : config" standalone />
       <div v-if="config" class="direct-meta">
         <span>{{
           tx('{digits} 位 · 每 {period} 秒更新', { digits: config.digits, period: config.period })
@@ -222,6 +282,18 @@ useHead({ meta: [{ name: 'referrer', content: 'no-referrer' }] })
   </div>
 </template>
 <style scoped>
+.path-warning-copy {
+  display: grid;
+  gap: 0.75rem;
+}
+.path-warning-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.path-warning-advice {
+  color: var(--ui-text-highlighted);
+}
 .direct-page {
   max-width: 48rem;
   margin: 2rem auto 0;
